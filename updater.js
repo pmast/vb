@@ -8,6 +8,13 @@ var earth_radius = 6371*1000;
 var ll = require("latlon");
 
 var mongoose = require('mongoose');
+mongoose.connection.on('disconnected', function () {
+  console.log('Mongoose default connection disconnected');
+});
+mongoose.connection.on("error", function(errorObject){
+  console.log(errorObject);
+});
+
 mongoose.connect('mongodb://localhost/vb');
 var Balloon = require('./models/balloon_model');
 
@@ -23,7 +30,7 @@ function toDeg(x){
     return x * 180 / Math.PI;
 }
 
-function rhumb(balloon, wind){
+function rhumb(balloon, wind, cb){
     var lat1 = toRad(balloon.location.latitude);
     var lon1 = toRad(balloon.location.longitude);
     
@@ -43,37 +50,31 @@ function rhumb(balloon, wind){
     lon2 = (lon1+dLon+Math.PI)%(2*Math.PI) - Math.PI;
     newPos = {'longitude': toDeg(lon2), 'latitude': toDeg(lat2), timestamp: now};
 
-    // console.log('old: ' + balloon.location);
-    // console.log(newPos);
     var p1 = new ll(balloon.location.latitude, balloon.location.longitude, earth_radius);
     var p2 = new ll(newPos.latitude, newPos.longitude, earth_radius);
 
-    // console.log('wind:     ' + wind.speed);
-    // console.log('distance: ' + p1.rhumbDistanceTo(p2)/1000);
     l = balloon.location;
-    console.log(l);
-    balloon.history.push(l);
-    balloon.history.push('help');
+    balloon.history.push(l.toObject());
     balloon.location = newPos;
-    console.log(balloon);
-    balloon.save(function(err){
+
+    balloon.save(function(err, b, n){
+        cb();
 		if (err){
 			return console.log(err);
 		} else {
-			return console.log('baloon saved.');
+			return console.log(balloon.name + ' saved.');
 		}
 	});
-	console.log("peter");
 }
 
 function interpolate(point, row){
 	values = row;
     if (values.length==1){
-        console.log("1 result");
+        // console.log("1 result");
         sp = values[0].speed;
         dir = values[0].direction;
     } else if (values.length==2){
-        console.log("2 results");
+        // console.log("2 results");
         if (values[0].latitude == values[1].latitude){
             sp = lerp(values[0].speed, values[1].speed, (point.longitude-values[0].longitude)/(values[1].longitude - values[0].longitude));
             dir = lerp(values[0].direction, values[1].direction, (point.longitude-values[0].longitude)/(values[1].longitude - values[0].longitude));
@@ -82,7 +83,7 @@ function interpolate(point, row){
             dir = lerp(values[0].direction, values[1].direction, (point.longitude-values[0].longitude)/(values[1].longitude - values[0].longitude));
         }
     } else if (values.length==4){
-        console.log("4 results");
+        // console.log("4 results");
         
         sp1 = lerp(values[0].speed, values[1].speed, (point.latitude-values[0].latitude)/(values[1].latitude - values[0].latitude));
         sp2 = lerp(values[2].speed, values[3].speed, (point.latitude-values[2].latitude)/(values[3].latitude - values[2].latitude));
@@ -101,34 +102,24 @@ function test(b, row){
 	console.log(row);
 }
 
-function getWind(balloon){
-	location = balloon.location;
+function getWind(balloon, cb){
+    console.log("processing " + balloon.name);
+    location = balloon.location;
     lat1 = Math.floor(location.latitude/0.5)*0.5;
     lat2 = Math.ceil(location.latitude/0.5)*0.5;
     lng1 = Math.floor((location.longitude+180)/0.5)*0.5;
     lng2 = Math.ceil((location.longitude+180)/0.5)*0.5;
     limit = ((lat1==lat2)?0:1) + ((lng1==lng2)?0:1);
     limit = Math.pow(2, limit);
-    query.finalize(function(){
-        query.all([lng1,lng2,lat1,lat2, limit], function(err, row){
-        	console.log("row:");
-        	console.log(row);
-        	console.log("--------------------");
-        	if (err) throw err;
-        	rhumb(balloon, interpolate(balloon.location, row));
-        	console.log("hier");
-            console.log(row);
-            db.close();
-        });
+    query.all([lng1,lng2,lat1,lat2, limit], function(err, row){
+    	if (err) throw err;
+    	rhumb(balloon, interpolate(balloon.location, row), cb);
     });
 }
 
 Balloon.find(function(err, balloons) {
-	getWind(balloons[0]);
-	console.log("haus");
-	// async.each(balloons, getWind, function(err){
-	// 	if (err) throw err;
-	// 	console.log('peter');
-	// 	// mongoose.connection.close();
-	// });
+	async.each(balloons, getWind, function(err){
+		if (err) throw err;
+		mongoose.disconnect();
+	});
 });
