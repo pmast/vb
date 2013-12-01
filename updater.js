@@ -1,7 +1,7 @@
 var path = require('path');
 var sqlite3 = require("sqlite3").verbose();
 // var db = new sqlite3.Database(path.join(__dirname, 'weather_data.db'));
-var db = new sqlite3.Database('weather_data.db');
+var db = new sqlite3.Database('data/weather_data.db');
 var async = require('async');
 // var query = db.prepare("select * from wind where time > datetime('now') and longitude between ? and ? and latitude between ? and ? order by time asc, forecast asc, longitude asc, latitude asc limit ?;");
 var query = db.prepare("select case when longitude > 180 then longitude-360 else longitude end as longitude, latitude, speed, direction, time ,forecast from wind where time > datetime('now') and longitude between ? and ? and latitude between ? and ? order by time asc, forecast asc, longitude asc, latitude asc limit ?;");
