@@ -1,6 +1,7 @@
 var path = require('path');
 var sqlite3 = require("sqlite3").verbose();
-var db = new sqlite3.Database(path.join(__dirname, 'weather_data.db'));
+// var db = new sqlite3.Database(path.join(__dirname, 'weather_data.db'));
+var db = new sqlite3.Database('weather_data.db');
 var async = require('async');
 // var query = db.prepare("select * from wind where time > datetime('now') and longitude between ? and ? and latitude between ? and ? order by time asc, forecast asc, longitude asc, latitude asc limit ?;");
 var query = db.prepare("select case when longitude > 180 then longitude-360 else longitude end as longitude, latitude, speed, direction, time ,forecast from wind where time > datetime('now') and longitude between ? and ? and latitude between ? and ? order by time asc, forecast asc, longitude asc, latitude asc limit ?;");
@@ -77,6 +78,7 @@ function rhumb(balloon, wind, cb){
 
 function interpolate(point, row){
     console.log(point);
+    console.log(row);
 	values = row;
     if (values.length==1){
         console.log("1 result");
@@ -106,7 +108,7 @@ function interpolate(point, row){
         console.log(sp);
         dir = lerp(dir1, dir2, (point.longitude-values[0].longitude)/(values[2].longitude - values[0].longitude));
     }
-    console.log({direction: dir, speed: sp});
+    // console.log({direction: dir, speed: sp});
     return {direction: dir, speed: sp};
 }
 
@@ -125,6 +127,7 @@ function getWind(balloon, cb){
     lng2 = Math.ceil(longitude/0.5)*0.5;
     limit = ((lat1==lat2)?0:1) + ((lng1==lng2)?0:1);
     limit = Math.pow(2, limit);
+    console.log([lng1,lng2,lat1,lat2, limit]);
     query.all([lng1,lng2,lat1,lat2, limit], function(err, row){
     	if (err) throw err;
     	rhumb(balloon, interpolate(balloon.location, row), cb);
