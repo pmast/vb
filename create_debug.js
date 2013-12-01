@@ -8,7 +8,7 @@ b = new Balloon({
 	name: "Patrick's ballon",
 	location: {
 		longitude: 10,
-		latitude: 54,
+		latitude: 53.5,
 		timestamp: new Date()
 	}
 });

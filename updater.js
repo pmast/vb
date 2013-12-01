@@ -1,8 +1,10 @@
+var path = require('path');
 var sqlite3 = require("sqlite3").verbose();
-var db = new sqlite3.Database('weather_data');
+var db = new sqlite3.Database(path.join(__dirname, 'weather_data.db'));
 var async = require('async');
 // var query = db.prepare("select * from wind where time > datetime('now') and longitude between ? and ? and latitude between ? and ? order by time asc, forecast asc, longitude asc, latitude asc limit ?;");
-var query = db.prepare("select * from wind where time > '2013-11-08' and longitude between ? and ? and latitude between ? and ? order by time asc, forecast asc, longitude asc, latitude asc limit ?;");
+var query = db.prepare("select case when longitude > 180 then longitude-360 else longitude end as longitude, latitude, speed, direction, time ,forecast from wind where time > datetime('now') and longitude between ? and ? and latitude between ? and ? order by time asc, forecast asc, longitude asc, latitude asc limit ?;");
+// var query = db.prepare("select * from wind where time > '2013-11-08' and longitude between ? and ? and latitude between ? and ? order by time asc, forecast asc, longitude asc, latitude asc limit ?;");
 var earth_radius = 6371*1000;
 
 var ll = require("latlon");
@@ -37,8 +39,13 @@ function rhumb(balloon, wind, cb){
     var now = new Date();
     var td = now - balloon.location.timestamp;
     td = td / 1000;
-    brng = toRad(wind.direction);
+    // correct direction, wind direction is given as the direction from which the wind blows
+    // we need where the wind blows to
+    brng = toRad((wind.direction + 180) % 360);
     d = wind.speed * td / earth_radius;
+    console.log("td: " + td + " seconds");
+    console.log("wind: " + wind.speed + " m/s " + wind.direction + " degree");
+    console.log("distance 1: " + wind.speed * td + " m");
     var dLat = d * Math.cos(brng);
     var lat2 = lat1 + dLat;
     var dPhi = Math.log(Math.tan(lat2/2+Math.PI/4)/Math.tan(lat1/2+Math.PI/4));
@@ -52,6 +59,7 @@ function rhumb(balloon, wind, cb){
 
     var p1 = new ll(balloon.location.latitude, balloon.location.longitude, earth_radius);
     var p2 = new ll(newPos.latitude, newPos.longitude, earth_radius);
+    console.log("distance 2: " + p1.rhumbDistanceTo(p2) + " m");
 
     l = balloon.location;
     balloon.history.push(l.toObject());
@@ -68,13 +76,14 @@ function rhumb(balloon, wind, cb){
 }
 
 function interpolate(point, row){
+    console.log(point);
 	values = row;
     if (values.length==1){
-        // console.log("1 result");
+        console.log("1 result");
         sp = values[0].speed;
         dir = values[0].direction;
     } else if (values.length==2){
-        // console.log("2 results");
+        console.log("2 results");
         if (values[0].latitude == values[1].latitude){
             sp = lerp(values[0].speed, values[1].speed, (point.longitude-values[0].longitude)/(values[1].longitude - values[0].longitude));
             dir = lerp(values[0].direction, values[1].direction, (point.longitude-values[0].longitude)/(values[1].longitude - values[0].longitude));
@@ -83,17 +92,21 @@ function interpolate(point, row){
             dir = lerp(values[0].direction, values[1].direction, (point.longitude-values[0].longitude)/(values[1].longitude - values[0].longitude));
         }
     } else if (values.length==4){
-        // console.log("4 results");
-        
+        console.log("4 results");
+        console.log(values);
         sp1 = lerp(values[0].speed, values[1].speed, (point.latitude-values[0].latitude)/(values[1].latitude - values[0].latitude));
+        console.log(sp1);
         sp2 = lerp(values[2].speed, values[3].speed, (point.latitude-values[2].latitude)/(values[3].latitude - values[2].latitude));
+        console.log(sp2);
         
         dir1 = lerp(values[0].direction, values[1].direction, (point.latitude-values[0].latitude)/(values[1].latitude - values[0].latitude));
         dir2 = lerp(values[2].direction, values[3].direction, (point.latitude-values[2].latitude)/(values[3].latitude - values[2].latitude));
         
         sp = lerp(sp1, sp2, (point.longitude-values[0].longitude)/(values[2].longitude - values[0].longitude));
+        console.log(sp);
         dir = lerp(dir1, dir2, (point.longitude-values[0].longitude)/(values[2].longitude - values[0].longitude));
     }
+    console.log({direction: dir, speed: sp});
     return {direction: dir, speed: sp};
 }
 
@@ -107,8 +120,9 @@ function getWind(balloon, cb){
     location = balloon.location;
     lat1 = Math.floor(location.latitude/0.5)*0.5;
     lat2 = Math.ceil(location.latitude/0.5)*0.5;
-    lng1 = Math.floor((location.longitude+180)/0.5)*0.5;
-    lng2 = Math.ceil((location.longitude+180)/0.5)*0.5;
+    var longitude = (location.longitude < 0 ? location.longitude + 360 : location.longitude);
+    lng1 = Math.floor(longitude/0.5)*0.5;
+    lng2 = Math.ceil(longitude/0.5)*0.5;
     limit = ((lat1==lat2)?0:1) + ((lng1==lng2)?0:1);
     limit = Math.pow(2, limit);
     query.all([lng1,lng2,lat1,lat2, limit], function(err, row){
@@ -116,6 +130,18 @@ function getWind(balloon, cb){
     	rhumb(balloon, interpolate(balloon.location, row), cb);
     });
 }
+
+// mongoose.disconnect();
+// row = [
+// {longitude:0, latitude:0, speed: 1, direction: 10},
+// {longitude:0, latitude:1, speed: 3, direction: 30},
+// {longitude:1, latitude:0, speed: 2, direction: 20},
+// {longitude:1, latitude:1, speed: 6, direction: 60}
+// ];
+// point = {longitude:0.5, latitude:0.5};
+
+
+// console.log(interpolate(point, row));
 
 Balloon.find(function(err, balloons) {
 	async.each(balloons, getWind, function(err){
