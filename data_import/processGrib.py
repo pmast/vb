@@ -10,7 +10,7 @@ from datetime import timedelta
 
 
 state_file = "current_state"
-grib_dir = "grib_files"
+grib_dir = "../data/grib_files"
 db_path = "../data/weather_data.db"
 
 class State:
