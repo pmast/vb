@@ -21,10 +21,10 @@ exports.add = function(req, res){
 	res.send("OK!");
 	var balloon = new Balloon({
 		name: req.body.name,
+		message: req.body.message,
 		location: {
 			longitude: req.body.longitude,
-			latitude: req.body.latitude,
-			timestamp: new Date(req.body.timestamp),
+			latitude: req.body.latitude
 		},
 	});
 	balloon.save(function(err){

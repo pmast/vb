@@ -3,10 +3,12 @@ var	Schema = mongoose.Schema;
 
 var BalloonSchema = new Schema({
 	name: String,
+	message: String,
+	created: { type: Date, default: Date.now },
 	location: {
 		longitude: Number,
 		latitude: Number,
-		timestamp: Date
+		timestamp: { type: Date, default: Date.now }
 	},
 	history: [{
 		longitude: Number,
