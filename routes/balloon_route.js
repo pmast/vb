@@ -18,7 +18,7 @@ exports.show = function(req, res){
 exports.add = function(req, res){
 	console.log(req);
 	console.log(req.body);
-	res.send("OK!");
+	res.redirect("map.html");
 	var balloon = new Balloon({
 		name: req.body.name,
 		message: req.body.message,
