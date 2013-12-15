@@ -4,6 +4,19 @@ Todo, virtual balloon:
 - send status updates:
 	- text (google geo goidnig api): https://developers.google.com/maps/documentation/geocoding/?hl=de#ReverseGeocoding
 	- images (google static maps api): https://developers.google.com/maps/documentation/staticmaps/
+	- store user email with balloon
 - easily creating balloons from map
 - add map to create balloons
 - limit history size some how
+- make nice markers
+- find nice map tiles
+- make app only accessible from one domain not the whole server
+- implement more http verbs
+	- post vs. put
+- add simple idenitfier to every balloon
+- make map callable with ID get argument to only show that balloon
+- store weather information with positions history
+- make balloon history clickable
+- make balloons deletable via email
+- base default location on adding balloon on other factors, e.g. ip?
+- make balloons custimizable
