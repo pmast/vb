@@ -9,6 +9,7 @@
     "express": "3.4.4",
     "jade": "*",
     "mongoose": "3.8.0",
-    "sqlite3": "2.1.19" 
+    "sqlite3": "2.1.19", 
+    "async": "0.2.9"
   }
 }

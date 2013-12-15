@@ -51,7 +51,7 @@
 			}
 
 			function loadBalloons(add){
-				$.getJSON("http://localhost:3000/balloons", function(data, status){
+				$.getJSON("balloons", function(data, status){
 					console.log(status);
 					console.log(data);
 					$.each(data, add);
