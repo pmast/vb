@@ -25,7 +25,8 @@
 					console.log(b.name);
 					console.log(b);
 					var marker = L.marker([b.location.latitude, b.location.longitude]).addTo(map);
-					marker.bindPopup(b.name + "<br>started: " + $.format.date(b.created, 'yyyy-M-dd HH:mm'));
+					marker.bindPopup(b.name + "<br>started: " + $.format.toBrowserTimeZone(b.created, 'yyyy-M-dd HH:mm')
+						+"<br>last updated: " + $.format.toBrowserTimeZone(b.location.timestamp, 'yyyy-M-dd HH:mm'));
 					var path = [];
 					$.each(b.history, function(i, l){
 						path.push([l.latitude, l.longitude]);
