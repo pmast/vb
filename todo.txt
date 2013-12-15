@@ -1,0 +1,9 @@
+Todo, virtual balloon:
+-----------------------
+
+- send status updates:
+	- text (google geo goidnig api): https://developers.google.com/maps/documentation/geocoding/?hl=de#ReverseGeocoding
+	- images (google static maps api): https://developers.google.com/maps/documentation/staticmaps/
+- easily creating balloons from map
+- add map to create balloons
+- limit history size some how
