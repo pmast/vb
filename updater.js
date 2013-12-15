@@ -79,7 +79,7 @@ function rhumb(balloon, wind, cb){
 function interpolate(point, row){
     console.log(point);
     console.log(row);
-	values = row;
+    values = row;
     if (values.length==1){
         console.log("1 result");
         sp = values[0].speed;
@@ -130,6 +130,7 @@ function getWind(balloon, cb){
     console.log([lng1,lng2,lat1,lat2, limit]);
     query.all([lng1,lng2,lat1,lat2, limit], function(err, row){
     	if (err) throw err;
+	console.log(row);
     	rhumb(balloon, interpolate(balloon.location, row), cb);
     });
 }
