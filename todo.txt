@@ -1,6 +1,8 @@
 Todo, virtual balloon:
 -----------------------
 
+- prevent entries with null values
+	- http://alittlecode.com/files/jQuery-Validate-Demo/index.html
 - prevent dublicates in wind database
 	- http://www.sqlite.org/syntaxdiagrams.html#table-constraint
 - send status updates:
@@ -13,6 +15,9 @@ Todo, virtual balloon:
 - make nice markers
 - find nice map tiles
 - make app only accessible from one domain not the whole server
+	- keyword: 'ip tables'
+	- http://www.shorewall.net/
+	- https://help.ubuntu.com/community/IptablesHowTo
 - implement more http verbs
 	- post vs. put
 - add simple idenitfier to every balloon
