@@ -95,7 +95,6 @@ function interpolate(point, row){
         }
     } else if (values.length==4){
         console.log("4 results");
-        console.log(values);
         sp1 = lerp(values[0].speed, values[1].speed, (point.latitude-values[0].latitude)/(values[1].latitude - values[0].latitude));
         console.log(sp1);
         sp2 = lerp(values[2].speed, values[3].speed, (point.latitude-values[2].latitude)/(values[3].latitude - values[2].latitude));

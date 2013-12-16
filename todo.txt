@@ -1,6 +1,8 @@
 Todo, virtual balloon:
 -----------------------
 
+- prevent dublicates in wind database
+	- http://www.sqlite.org/syntaxdiagrams.html#table-constraint
 - send status updates:
 	- text (google geo goidnig api): https://developers.google.com/maps/documentation/geocoding/?hl=de#ReverseGeocoding
 	- images (google static maps api): https://developers.google.com/maps/documentation/staticmaps/
