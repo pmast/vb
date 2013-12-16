@@ -43,7 +43,10 @@ class State:
     
     def check(self):
         if len(self.last_check) > 0:
-            return self.last_check[-1] + timedelta(seconds = self.time_between_checks) < datetime.now()
+            print self.last_check[-1]
+            print self.last_check[-1] + timedelta(seconds = self.time_between_checks)
+            print datetime.now()
+            return self.last_check[-1] + timedelta(seconds = (self.time_between_checks-35*60)) < datetime.now()
         return 1
 
 def initState():
@@ -165,8 +168,9 @@ def storeData(grbs):
 
 
 cs = initState()
+print cs.last_check
 if not cs.check():
-    #print "no check yet!"
+    print "no check yet!"
     sys.exit()
 check = 1
 while check:
