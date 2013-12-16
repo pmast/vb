@@ -42,11 +42,12 @@ class State:
                 self.date += timedelta(days = 1)
     
     def check(self):
-        if len(self.last_check) > 0:
-            print self.last_check[-1]
-            print self.last_check[-1] + timedelta(seconds = self.time_between_checks)
-            print datetime.now()
-            return self.last_check[-1] + timedelta(seconds = (self.time_between_checks-35*60)) < datetime.now()
+        # if only one check has been performed yet, keep on checking until new file appears
+        # from that poijt onwards, check only every 5 hours.
+        if len(self.last_check) <= 1:
+            return 1
+        elif len(self.last_check) > 0:
+            return self.last_check[-1] + timedelta(seconds = self.time_between_checks) < datetime.now()
         return 1
 
 def initState():
@@ -172,6 +173,7 @@ print cs.last_check
 if not cs.check():
     print "no check yet!"
     sys.exit()
+print "checking..."
 check = 1
 while check:
     filename = getGrib(cs)
