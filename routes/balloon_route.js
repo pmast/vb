@@ -22,6 +22,7 @@ exports.add = function(req, res){
 	var balloon = new Balloon({
 		name: req.body.name,
 		message: req.body.message,
+		email: req.body.email,
 		location: {
 			longitude: req.body.longitude,
 			latitude: req.body.latitude

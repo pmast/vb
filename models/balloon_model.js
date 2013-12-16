@@ -4,6 +4,7 @@ var	Schema = mongoose.Schema;
 var BalloonSchema = new Schema({
 	name: String,
 	message: String,
+	email: String,
 	created: { type: Date, default: Date.now },
 	location: {
 		longitude: Number,
