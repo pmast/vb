@@ -1,8 +1,6 @@
 Todo, virtual balloon:
 -----------------------
 
-- prevent entries with null values
-	- http://alittlecode.com/files/jQuery-Validate-Demo/index.html
 - prevent dublicates in wind database
 	- http://www.sqlite.org/syntaxdiagrams.html#table-constraint
 - send status updates:
@@ -10,7 +8,6 @@ Todo, virtual balloon:
 	- images (google static maps api): https://developers.google.com/maps/documentation/staticmaps/
 	- store user email with balloon
 - easily creating balloons from map
-- add map to create balloons
 - limit history size some how
 - make nice markers
 - find nice map tiles
@@ -30,4 +27,11 @@ Todo, virtual balloon:
 - make balloons deletable via email
 - base default location on adding balloon on other factors, e.g. ip?
 	- http://freegeoip.net/
+	- http://stackoverflow.com/questions/10849687/express-js-how-to-get-remote-client-address
 - make balloons custimizable
+
+done:
+
+* prevent entries with null values
+	- http://alittlecode.com/files/jQuery-Validate-Demo/index.html
+* add map to create balloons
