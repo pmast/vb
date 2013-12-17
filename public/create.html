@@ -25,7 +25,10 @@
     input.valid {border: solid rgba(69, 135, 70, 1) 1px;
       background: rgba(69, 135, 70, 0.25);
     }
-    #map{}
+    #mapcontainer{position:relative;
+      width:500px;
+      height:500px;
+    }
   </style>
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -57,17 +60,21 @@
           maxZoom: 18
         }).addTo(map);
         map.on("moveend",function(e){
-          c = this.getCenter();
-          $("#longitude").val(c.lng);
-          $("#longitude").valid();
-          $("#latitude").val(c.lat);
-          $("#latitude").valid();
+          this.vb.setCenterFields();
         });
         return map;
       }
 
       $(document).ready(function(){
         map = initMap();
+        map.vb={};
+        map.vb.setCenterFields = function(){
+          c = map.getCenter();
+          $("#longitude").val(c.lng);
+          $("#latitude").val(c.lat);
+          console.log("center set");
+        };
+        map.vb.setCenterFields();
         navigator.geolocation.getCurrentPosition(function(pos){
           success(pos, map);
         }, error, {timeout: 5000});
@@ -80,18 +87,6 @@
             email: {
               required: true,
               email: true
-            },
-            longitude: {
-              required: true,
-              number: true,
-              max: 180,
-              min: -180
-            },
-            latitude: {
-              required: true,
-              number: true,
-              max: 90,
-              min: -90
             }
           }
         });
@@ -109,22 +104,20 @@
         <br>
         <input type="text" class="form-control" placeholder="e-mail" name="email">
         <br>
-        <br>
-        <input type="text" class="form-control" placeholder="Longitude" name="longitude" id="longitude">
-        <br>
-        <input type="text" class="form-control" placeholder="Latitude" name="latitude" id="latitude">
+        <div id="mapcontainer">
+          <div style="position:absolute; width:100%; height:100%; z-index: 1;" id="map"></div>
+          <div style="position:absolute; width:100%; height:100%; z-index: 99; pointer-events:none;">
+            <svg style="width:100%; height:100%; background:transparent;">
+                <circle cx="50%" cy="50%" r="10" stroke="black" stroke-width="2" fill="transparent" />
+            </svg>
+          </div>
+        </div>
         <br>
         <button type="submit" class="btn btn-default">Submit</button>
+        <input type="hidden" class="form-control" placeholder="Longitude" name="longitude" id="longitude">
+        <input type="hidden" class="form-control" placeholder="Latitude" name="latitude" id="latitude">
       </form>
       <br>
-      <div style="position:relative; width:500px; height:500px;">
-        <div style="position:absolute; width:100%; height:100%; z-index: 1;" id="map"></div>
-        <div style="position:absolute; width:100%; height:100%; z-index: 99; pointer-events:none;">
-          <svg style="width:100%; height:100%; background:transparent;">
-              <circle cx="50%" cy="50%" r="10" stroke="black" stroke-width="2" fill="transparent" />
-          </svg>
-        </div>
-      </div>
 
     </body>
     </html>
