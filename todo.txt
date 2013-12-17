@@ -14,6 +14,8 @@ Todo, virtual balloon:
 - limit history size some how
 - make nice markers
 - find nice map tiles
+- add wind tiles:
+	- http://www.bluewater-info.net/wiki_/Help:Weather_tiles
 - make app only accessible from one domain not the whole server
 	- keyword: 'ip tables'
 	- http://www.shorewall.net/
