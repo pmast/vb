@@ -24,6 +24,8 @@
 				var addF = function(i, b){
 					console.log(b.name);
 					console.log(b);
+					if (b.location.latitude == null ||
+						b.location.longitude == null) return;
 					var marker = L.marker([b.location.latitude, b.location.longitude]).addTo(map);
 					marker.bindPopup(b.name + "<br>started: " + $.format.toBrowserTimeZone(b.created, 'yyyy-M-dd HH:mm')
 						+"<br>last updated: " + $.format.toBrowserTimeZone(b.location.timestamp, 'yyyy-M-dd HH:mm'));
