@@ -6,7 +6,7 @@ Todo, virtual balloon:
 - prevent dublicates in wind database
 	- http://www.sqlite.org/syntaxdiagrams.html#table-constraint
 - send status updates:
-	- text (google geo goidnig api): https://developers.google.com/maps/documentation/geocoding/?hl=de#ReverseGeocoding
+	- text (google geo coding api): https://developers.google.com/maps/documentation/geocoding/?hl=de#ReverseGeocoding
 	- images (google static maps api): https://developers.google.com/maps/documentation/staticmaps/
 	- store user email with balloon
 - easily creating balloons from map
@@ -21,9 +21,11 @@ Todo, virtual balloon:
 - implement more http verbs
 	- post vs. put
 - add simple idenitfier to every balloon
+	- https://npmjs.org/package/hashids
 - make map callable with ID get argument to only show that balloon
 - store weather information with positions history
 - make balloon history clickable
 - make balloons deletable via email
 - base default location on adding balloon on other factors, e.g. ip?
+	- http://freegeoip.net/
 - make balloons custimizable
