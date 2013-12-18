@@ -6,7 +6,7 @@ Todo, virtual balloon:
 - send status updates:
 	- text (google geo coding api): https://developers.google.com/maps/documentation/geocoding/?hl=de#ReverseGeocoding
 	- images (google static maps api): https://developers.google.com/maps/documentation/staticmaps/
-	- store user email with balloon
+	* store user email with balloon
 - easily creating balloons from map
 - limit history size some how
 - make nice markers
@@ -29,6 +29,7 @@ Todo, virtual balloon:
 	- http://freegeoip.net/
 	- http://stackoverflow.com/questions/10849687/express-js-how-to-get-remote-client-address
 - make balloons custimizable
+- live updating balloon positions
 
 done:
 
