@@ -9,6 +9,8 @@ Todo, virtual balloon:
 	* store user email with balloon
 - easily creating balloons from map
 - limit history size some how
+	- new history collection
+	- only store last n positions for displaying
 - make nice markers
 - find nice map tiles
 - add wind tiles:
@@ -30,6 +32,7 @@ Todo, virtual balloon:
 	- http://stackoverflow.com/questions/10849687/express-js-how-to-get-remote-client-address
 - make balloons custimizable
 - live updating balloon positions
+- add statistics
 
 done:
 
