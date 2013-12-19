@@ -33,6 +33,9 @@ Todo, virtual balloon:
 - make balloons custimizable
 - live updating balloon positions
 - add statistics
+	- average speed
+	- km last 24 hours
+- add rankings
 
 done:
 
