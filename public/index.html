@@ -29,14 +29,16 @@
 					var marker = L.marker([b.location.latitude, b.location.longitude]).addTo(map);
 					marker.bindPopup(b.name + "<br>started: " + $.format.toBrowserTimeZone(b.created, 'yyyy-M-dd HH:mm')
 						+"<br>last updated: " + $.format.toBrowserTimeZone(b.location.timestamp, 'yyyy-M-dd HH:mm'));
-					var path = [];
+					start = marker.getLatLng();
+					b.history.reverse();
+					step = (1-0.2)/b.history.length;
+					transparency = 1;
 					$.each(b.history, function(i, l){
-						path.push([l.latitude, l.longitude]);
+						end = [l.latitude, l.longitude];
+						L.polyline([[start, end]], {color:rgba(255,0,0,transparency)}).addTo(map);
+						transparency-=step;
+						start = end;
 					});
-					path.push(marker.getLatLng());
-					console.log(path);
-					L.polyline(path, {color:"red"}).addTo(map);
-
 				}
 				loadBalloons(addF);
 			});
