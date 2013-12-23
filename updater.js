@@ -5,6 +5,7 @@ var db = new sqlite3.Database('data/weather_data.db');
 var async = require('async');
 // var query = db.prepare("select * from wind where time > datetime('now') and longitude between ? and ? and latitude between ? and ? order by time asc, forecast asc, longitude asc, latitude asc limit ?;");
 var query = db.prepare("select case when longitude > 180 then longitude-360 else longitude end as longitude, latitude, speed, direction, time ,forecast from wind where time > datetime('now') and longitude between ? and ? and latitude between ? and ? order by time asc, forecast asc, longitude asc, latitude asc limit ?;");
+// time > datetime('now') and 
 // var query = db.prepare("select * from wind where time > '2013-11-08' and longitude between ? and ? and latitude between ? and ? order by time asc, forecast asc, longitude asc, latitude asc limit ?;");
 var earth_radius = 6371*1000;
 
@@ -20,6 +21,7 @@ mongoose.connection.on("error", function(errorObject){
 
 mongoose.connect('mongodb://localhost/vb');
 var Balloon = require('./models/balloon_model');
+var BalloonHistory = require('./models/balloon_history_model');
 
 function lerp(a, b, t){
     return a + t * (b-a);
@@ -66,14 +68,16 @@ function rhumb(balloon, wind, cb){
     balloon.history.push(l.toObject());
     balloon.location = newPos;
 
-    balloon.save(function(err, b, n){
-        cb();
-		if (err){
-			return console.log(err);
-		} else {
-			return console.log(balloon.name + ' saved.');
-		}
-	});
+    reduceHistory(balloon, 10, function(balloon){
+        balloon.save(function(err, b, n){
+            cb();
+            if (err){
+             return console.log(err);
+         } else {
+             return console.log(balloon.name + ' saved.');
+         }
+    })
+ });
 }
 
 function interpolate(point, row){
@@ -127,11 +131,38 @@ function getWind(balloon, cb){
     limit = ((lat1==lat2)?0:1) + ((lng1==lng2)?0:1);
     limit = Math.pow(2, limit);
     console.log([lng1,lng2,lat1,lat2, limit]);
+
+    console.log(balloon.history.length);
+
     query.all([lng1,lng2,lat1,lat2, limit], function(err, row){
-    	if (err) throw err;
-	console.log(row);
-    	rhumb(balloon, interpolate(balloon.location, row), cb);
+        if (err) throw err;
+        console.log(row);
+        console.log('hans');
+        if (row.length==0){
+            console.log('empty wind result');
+            cb();
+            return;
+        }
+        rhumb(balloon, interpolate(balloon.location, row), cb);
     });
+}
+
+function reduceHistory(balloon, hlength, cb){
+    // reduce history by 1
+    // call recursively until length of history = n
+    // then call call back
+    if (balloon.history.length<=hlength){
+        cb(balloon);
+    } else {
+        history_item = balloon.history.shift();
+        bh = new BalloonHistory();
+        bh.balloonID = balloon._id;
+        bh.location = history_item.toObject();
+        bh.save(function(err, b, n){
+            if (err) throw err;
+            reduceHistory(balloon,hlength,cb);
+        });
+    }
 }
 
 // mongoose.disconnect();
