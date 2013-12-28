@@ -28,7 +28,7 @@ Todo, virtual balloon:
 - make balloon history clickable
 - make balloons deletable via email
 - base default location on adding balloon on other factors, e.g. ip?
-	- http://freegeoip.net/
+	* http://freegeoip.net/
 	- http://stackoverflow.com/questions/10849687/express-js-how-to-get-remote-client-address
 - make balloons custimizable
 - live updating balloon positions

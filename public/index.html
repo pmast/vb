@@ -43,34 +43,35 @@
 					if (b.location.latitude == null ||
 						b.location.longitude == null) return;
 					var marker = L.marker([b.location.latitude, b.location.longitude]).addTo(map);
+					showFullHistory(b.id);
 					marker.bindPopup(b.name + "<br>started: " + $.format.toBrowserTimeZone(b.created, 'yyyy-M-dd HH:mm')
 						+"<br>last updated: " + $.format.toBrowserTimeZone(b.location.timestamp, 'yyyy-M-dd HH:mm') + '<br>'
 						+ '<a href="javascript:showHistory(&#39;'+b.id+'&#39;);">show history</a><br>'
 						+ '<a href="javascript:showFullHistory(&#39;'+b.id+'&#39;);">show full history</a>');
-					// start = marker.getLatLng();
-					// b.history.reverse();
-					// step = (1-0.2)/b.history.length;
-					// transparency = 1;
-					// $.each(b.history, function(i, l){
-					// 	end = L.latLng([l.latitude, l.longitude]);
-					// 	L.polyline([start, end], {color:'red', opacity: transparency}).addTo(map);
-					// 	transparency-=step;
-					// 	start = end;
-					// });
 				}
+				$.getJSON('http://freegeoip.net/json/', function(data, status){
+					console.log(data);
+					map.setView(new L.latLng(data.latitude, data.longitude), 5, {animate:true});
+				});				
 				loadBalloons(addF);
+
 			});
 
 			function initMap(){
 				var map = L.map('map').setView([53.5, 10], 5);
 				L.tileLayer('http://{s}.tile.cloudmade.com/8d1255ae36dc4decb3791bfa3f1d58cc/997/256/{z}/{x}/{y}.png', {
 					attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
-					maxZoom: 18
+					maxZoom: 18,
+					minZoom: 2
+					,detectRetina: true
 				}).addTo(map);
-				// L.tileLayer('http://tiles.wxtiles.com/wind/20131201_06z/{z}/{x}/{y}.png', {
-				// 	attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
-				// 	maxZoom: 18
+				// L.tileLayer('http://www.openportguide.org/tiles/actual/wind_vector/5/{z}/{x}/{y}.png', {
+				// 	attribution: 'http://www.bluewater-info.net/wiki_/Help:Weather_tiles#wind_tiles',
+				// 	maxZoom: 18,
+				// 	minZoom: 4
+				// 	,detectRetina: false
 				// }).addTo(map);
+
 
 				return map;
 			}
