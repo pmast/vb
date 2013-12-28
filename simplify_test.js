@@ -2,15 +2,16 @@ var s = require('simplify.js');
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/vb');
-var BalloonHistory = require('./models/balloon_history_model');
-
-history = BalloonHistory.find({balloonID: "52b7ef49218388be10000002"}, 	'location', function(err, items){
+var Balloon = require('./models/balloon_model');
+	
+Balloon.find({name:"Patrick's ballon"}, function(err, bs){
 	if (err) throw err;
-	h = items.map(function(el){
-		return el.location;
+	console.log(bs.length);
+	// bs[0].poops();
+	console.log(bs[0].getHashID());
+	bs[0].getSimplifiedHistory(function(err, h_s){
+		console.log(h_s.length);
+		console.log(h_s);
+		mongoose.disconnect();
 	});
-	console.log(h.length);
-	h_s = s(h);
-	console.log(h_s.length);
-	mongoose.disconnect();
 });

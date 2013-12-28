@@ -19,27 +19,44 @@
 		-->
 		</style>
 		<script language="JavaScript">
+			function showHistory(id){
+				$.getJSON('balloon/'+id+'/history', function(data, status, code){
+					list = $.map(data, function(el){
+						return [[el.latitude, el.longitude]];
+					});
+					L.polyline(list, {color:'red'}).addTo(map);
+				});
+			}
+
+			function showFullHistory(id){
+				$.getJSON('balloon/'+id+'/full_history', function(data){
+					list = $.map(data, function(el){
+						return [[el.latitude, el.longitude]];
+					});
+					L.polyline(list, {color:'blue'}).addTo(map);
+				});
+			}
+
 			$(document).ready(function(){
 				map = initMap();
 				var addF = function(i, b){
-					console.log(b.name);
-					console.log(b);
 					if (b.location.latitude == null ||
 						b.location.longitude == null) return;
 					var marker = L.marker([b.location.latitude, b.location.longitude]).addTo(map);
 					marker.bindPopup(b.name + "<br>started: " + $.format.toBrowserTimeZone(b.created, 'yyyy-M-dd HH:mm')
-						+"<br>last updated: " + $.format.toBrowserTimeZone(b.location.timestamp, 'yyyy-M-dd HH:mm'));
-					start = marker.getLatLng();
-					b.history.reverse();
-					step = (1-0.2)/b.history.length;
-					transparency = 1;
-					$.each(b.history, function(i, l){
-						end = L.latLng([l.latitude, l.longitude]);
-						L.polyline([start, end], {color:'red', opacity: transparency}).addTo(map);
-console.log(transparency);
-						transparency-=step;
-						start = end;
-					});
+						+"<br>last updated: " + $.format.toBrowserTimeZone(b.location.timestamp, 'yyyy-M-dd HH:mm') + '<br>'
+						+ '<a href="javascript:showHistory(&#39;'+b.id+'&#39;);">show history</a><br>'
+						+ '<a href="javascript:showFullHistory(&#39;'+b.id+'&#39;);">show full history</a>');
+					// start = marker.getLatLng();
+					// b.history.reverse();
+					// step = (1-0.2)/b.history.length;
+					// transparency = 1;
+					// $.each(b.history, function(i, l){
+					// 	end = L.latLng([l.latitude, l.longitude]);
+					// 	L.polyline([start, end], {color:'red', opacity: transparency}).addTo(map);
+					// 	transparency-=step;
+					// 	start = end;
+					// });
 				}
 				loadBalloons(addF);
 			});
@@ -60,8 +77,6 @@ console.log(transparency);
 
 			function loadBalloons(add){
 				$.getJSON("balloons", function(data, status){
-					console.log(status);
-					console.log(data);
 					$.each(data, add);
 				});
 			};

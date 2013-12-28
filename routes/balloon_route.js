@@ -1,19 +1,51 @@
 //handle balloon requests
-
 var Balloon = require('../models/balloon_model');
 
 
 exports.list = function(req, res){
-	Balloon.find(function(err, threads) {
-		res.send(threads);
+	Balloon.find(function(err, balloons) {
+		result = balloons.map(function(el){
+			id = el.getHashID();
+			el = el.toObject();
+			el.id = id;
+			delete el._id;
+			delete el.history;
+			return el;
+		});
+		res.send(result);
 	});
 };
 
-exports.show = function(req, res){
-	Balloon.find({name:req.params.name},function(err, threads) {
-		res.send(threads);
+exports.history = function(req, res){
+	Balloon.findByID(req.params.id, function(err, balloons){
+		if (err) throw err;
+		if (balloons.length==1){
+			balloons[0].getSimplifiedHistory(function(err, result){
+				if (err) throw err;
+				res.send(result);
+			})
+		} else {
+			console.log('error (length: '+balloons.length+')');
+			res.send({});
+		}
 	});
 };
+
+exports.full_history = function(req, res){
+	Balloon.findByID(req.params.id, function(err, balloons){
+		if (err) throw err;
+		if (balloons.length==1){
+			balloons[0].getFullHistory(function(err, result){
+				if (err) throw err;
+				res.send(result);
+			})
+		} else {
+			console.log('error (length: '+balloons.length+')');
+			res.send({});
+		}
+	});
+};
+
 
 exports.add = function(req, res){
 	console.log(req);

@@ -1,5 +1,3 @@
-
-
 var express = require('express');
 var routes = require('./routes');
 var user = require('./routes/user');
@@ -9,7 +7,6 @@ var path = require('path');
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/vb');
-
 
 var app = express();
 
@@ -33,7 +30,8 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/users', user.list);
 app.get('/balloons', balloon.list);
-app.get('/balloon/:name', balloon.show);
+app.get('/balloon/:id/history', balloon.history);
+app.get('/balloon/:id/full_history', balloon.full_history);
 app.post('/balloon/add', balloon.add);
 app.post('/balloon/delete', balloon.add);
 
