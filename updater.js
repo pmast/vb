@@ -4,7 +4,7 @@ var sqlite3 = require("sqlite3").verbose();
 var db = new sqlite3.Database('data/weather_data.db');
 var async = require('async');
 // var query = db.prepare("select * from wind where time > datetime('now') and longitude between ? and ? and latitude between ? and ? order by time asc, forecast asc, longitude asc, latitude asc limit ?;");
-var query = db.prepare("select case when longitude > 180 then longitude-360 else longitude end as longitude, latitude, speed, direction, time ,forecast from wind where time > datetime('now') and longitude between ? and ? and latitude between ? and ? order by time asc, forecast asc, longitude asc, latitude asc limit ?;");
+var query = db.prepare("select case when longitude > 180 then longitude-360 else longitude end as longitude, latitude, speed, direction, time ,forecast from wind where time > datetime('now') and longitude in (?, ?) and latitude in (?, ?) order by time asc, forecast asc, longitude asc, latitude asc limit ?;");
 // time > datetime('now') and 
 // var query = db.prepare("select * from wind where time > '2013-11-08' and longitude between ? and ? and latitude between ? and ? order by time asc, forecast asc, longitude asc, latitude asc limit ?;");
 var earth_radius = 6371*1000;
@@ -84,6 +84,7 @@ function interpolate(point, row){
     console.log(point);
     console.log(row);
     values = row;
+
     if (values.length==1){
         console.log("1 result");
         sp = values[0].speed;
@@ -108,6 +109,7 @@ function interpolate(point, row){
         dir2 = lerp(values[2].direction, values[3].direction, (point.latitude-values[2].latitude)/(values[3].latitude - values[2].latitude));
         
         sp = lerp(sp1, sp2, (point.longitude-values[0].longitude)/(values[2].longitude - values[0].longitude));
+        console.log('hans');
         console.log(sp);
         dir = lerp(dir1, dir2, (point.longitude-values[0].longitude)/(values[2].longitude - values[0].longitude));
     }
@@ -130,10 +132,13 @@ function getWind(balloon, cb){
     lng2 = Math.ceil(longitude/0.5)*0.5;
     limit = ((lat1==lat2)?0:1) + ((lng1==lng2)?0:1);
     limit = Math.pow(2, limit);
+
+    lng1 = lng1%360;
+    lng2 = lng2%360;
     console.log([lng1,lng2,lat1,lat2, limit]);
 
-    console.log(balloon.history.length);
-
+    // console.log(balloon.history.length);
+    console.log([lng1,lng2,lat1,lat2, limit]);
     query.all([lng1,lng2,lat1,lat2, limit], function(err, row){
         if (err) throw err;
         console.log(row);

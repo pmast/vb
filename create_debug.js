@@ -7,8 +7,8 @@ var Balloon = require('./models/balloon_model');
 b = new Balloon({
 	name: "Patrick's ballon",
 	location: {
-		longitude: 10,
-		latitude: 53.5,
+		longitude: -0.3,
+		latitude: 53.23,
 		timestamp: new Date()
 	}
 });
