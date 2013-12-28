@@ -29,8 +29,8 @@ function sortHistory(a, b){
 }
 
 BalloonSchema.methods.getSimplifiedHistory = function (cb) {
-	return BalloonHistory.find({balloonID: this._id}, 'location', function(err, items){
-		items.sort(sortHistory);
+	return BalloonHistory.find({balloonID: this._id}, 'location', {sort: {timestamp: 1}}, function(err, items){
+		console.log(items.length + " history items");
 		h = items.map(function(el){
 			return el.location;
 		});
@@ -40,8 +40,8 @@ BalloonSchema.methods.getSimplifiedHistory = function (cb) {
 }
 
 BalloonSchema.methods.getFullHistory = function (cb) {
-	return BalloonHistory.find({balloonID: this._id}, 'location', function(err, items){
-		items.sort(sortHistory);
+	return BalloonHistory.find({balloonID: this._id}, 'location', {sort: {timestamp: 1}}, function(err, items){
+		console.log(items.length + " history items");
 		items = items.map(function(el){
 			return el.location;
 		});
