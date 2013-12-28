@@ -18,12 +18,14 @@ var BalloonHistory = require('./models/balloon_history_model');
 function rm(balloon, date, cb3){
 	BalloonHistory.findOne({balloonID: balloon._id, 'location.timestamp': date}, function(err, keep){
 			console.log('keep: ' + keep);
-    		BalloonHistory.find({
+    		BalloonHistory.remove({
     			balloonID: balloon._id,
-    			'location.timestamp': date
-    		}, function(err, results){
+    			'location.timestamp': date,
+			_id: {$ne: keep._id},
+			'location.longitude': keep.location.longitude,
+			'location.latitude': keep.location.latitude
+    		}, function(err){
     			if (err) throw err;
-    			console.log('length: ' + results.length);
     			console.log('removed: ' + balloon.id + ", " + date);
     			cb3();
     		});
