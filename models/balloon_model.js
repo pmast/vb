@@ -8,18 +8,12 @@ var BalloonSchema = new Schema({
 	name: String,
 	message: String,
 	email: String,
-	test: String,
 	created: { type: Date, default: Date.now },
 	location: {
 		longitude: Number,
 		latitude: Number,
 		timestamp: { type: Date, default: Date.now }
-	},
-	history: [{
-		longitude: Number,
-		latitude: Number,
-		timestamp: Date
-	}]
+	}
 });
 
 function sortHistory(a, b){

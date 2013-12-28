@@ -62,20 +62,24 @@ function rhumb(balloon, wind, cb){
     var p2 = new ll(newPos.latitude, newPos.longitude, earth_radius);
     console.log("distance 2: " + p1.rhumbDistanceTo(p2) + " m");
 
-    l = balloon.location;
-    balloon.history.push(l.toObject());
+    // l = balloon.location;
+    // balloon.history.push(l.toObject());
     balloon.location = newPos;
+    // balloon.history.push(l.toObject());
 
-    reduceHistory(balloon, config.history_size, function(balloon){
-        balloon.save(function(err, b, n){
-            cb();
-            if (err){
-             return console.log(err);
-         } else {
-             return console.log(balloon.name + ' saved.');
-         }
-    })
- });
+
+
+    balloon.save(function(err, b, n){
+        if (err) throw err;
+        bh = new BalloonHistory();
+        bh.balloonID = b._id;
+        bh.location = b.location.toObject();
+        bh.save(function(err, b, n){
+            if (err) throw err;
+            cb();    
+        });
+        return console.log(balloon.name + ' saved.');
+    });
 }
 
 function interpolate(point, row){
@@ -150,35 +154,6 @@ function getWind(balloon, cb){
     });
 }
 
-function reduceHistory(balloon, hlength, cb){
-    // reduce history by 1
-    // call recursively until length of history = n
-    // then call call back
-    if (balloon.history.length<=hlength){
-        cb(balloon);
-    } else {
-        history_item = balloon.history.shift();
-        bh = new BalloonHistory();
-        bh.balloonID = balloon._id;
-        bh.location = history_item.toObject();
-        bh.save(function(err, b, n){
-            if (err) throw err;
-            reduceHistory(balloon,hlength,cb);
-        });
-    }
-}
-
-// mongoose.disconnect();
-// row = [
-// {longitude:0, latitude:0, speed: 1, direction: 10},
-// {longitude:0, latitude:1, speed: 3, direction: 30},
-// {longitude:1, latitude:0, speed: 2, direction: 20},
-// {longitude:1, latitude:1, speed: 6, direction: 60}
-// ];
-// point = {longitude:0.5, latitude:0.5};
-
-
-// console.log(interpolate(point, row));
 
 Balloon.find(function(err, balloons) {
 	async.each(balloons, getWind, function(err){
