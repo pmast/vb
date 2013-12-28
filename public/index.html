@@ -28,13 +28,6 @@
 				});
 			}
 
-			function showBalloon(id){
-				$.getJSON('balloon/'+id, function(data, status, code){
-					console.log(id);
-					console.log(data);
-				});
-			}
-
 			function showFullHistory(id){
 				$.getJSON('balloon/'+id+'/full_history', function(data){
 					list = $.map(data, function(el){
@@ -52,7 +45,6 @@
 					var marker = L.marker([b.location.latitude, b.location.longitude]).addTo(map);
 					marker.bindPopup(b.name + "<br>started: " + $.format.toBrowserTimeZone(b.created, 'yyyy-M-dd HH:mm')
 						+"<br>last updated: " + $.format.toBrowserTimeZone(b.location.timestamp, 'yyyy-M-dd HH:mm') + '<br>'
-						+ '<a href="javascript:showBalloon(&#39;'+b.id+'&#39;);">show history</a><br>'
 						+ '<a href="javascript:showHistory(&#39;'+b.id+'&#39;);">show history</a><br>'
 						+ '<a href="javascript:showFullHistory(&#39;'+b.id+'&#39;);">show full history</a>');
 					// start = marker.getLatLng();
