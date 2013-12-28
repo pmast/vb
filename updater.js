@@ -1,15 +1,9 @@
 var path = require('path');
+var config = require('./config');
 var sqlite3 = require("sqlite3").verbose();
-// var db = new sqlite3.Database(path.join(__dirname, 'weather_data.db'));
 var db = new sqlite3.Database('data/weather_data.db');
 var async = require('async');
-// var query = db.prepare("select * from wind where time > datetime('now') and longitude between ? and ? and latitude between ? and ? order by time asc, forecast asc, longitude asc, latitude asc limit ?;");
 var query = db.prepare("select case when longitude > 180 then longitude-360 else longitude end as longitude, latitude, speed, direction, time ,forecast from wind where time > datetime('now') and longitude in (?, ?) and latitude in (?, ?) order by time asc, forecast asc, longitude asc, latitude asc limit ?;");
-// time > datetime('now') and 
-// var query = db.prepare("select * from wind where time > '2013-11-08' and longitude between ? and ? and latitude between ? and ? order by time asc, forecast asc, longitude asc, latitude asc limit ?;");
-var earth_radius = 6371*1000;
-
-var ll = require("latlon");
 
 var mongoose = require('mongoose');
 mongoose.connection.on('disconnected', function () {
@@ -19,9 +13,13 @@ mongoose.connection.on("error", function(errorObject){
   console.log(errorObject);
 });
 
+
 mongoose.connect('mongodb://localhost/vb');
 var Balloon = require('./models/balloon_model');
 var BalloonHistory = require('./models/balloon_history_model');
+
+var earth_radius = 6371*1000;
+var ll = require("latlon");
 
 function lerp(a, b, t){
     return a + t * (b-a);
@@ -68,7 +66,7 @@ function rhumb(balloon, wind, cb){
     balloon.history.push(l.toObject());
     balloon.location = newPos;
 
-    reduceHistory(balloon, 10, function(balloon){
+    reduceHistory(balloon, config.history_size, function(balloon){
         balloon.save(function(err, b, n){
             cb();
             if (err){
