@@ -16,6 +16,13 @@ exports.list = function(req, res){
 	});
 };
 
+exports.show = function(req, res){
+	Balloon.findByID(req.params.id, function(err, balloons){
+		if (err) throw err;
+		res.send(balloons);
+	});
+};
+
 exports.history = function(req, res){
 	Balloon.findByID(req.params.id, function(err, balloons){
 		if (err) throw err;

@@ -32,6 +32,7 @@ app.get('/users', user.list);
 app.get('/balloons', balloon.list);
 app.get('/balloon/:id/history', balloon.history);
 app.get('/balloon/:id/full_history', balloon.full_history);
+app.get('/balloon/:id', balloon.show);
 app.post('/balloon/add', balloon.add);
 app.post('/balloon/delete', balloon.add);
 
