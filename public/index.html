@@ -34,8 +34,9 @@
 					step = (1-0.2)/b.history.length;
 					transparency = 1;
 					$.each(b.history, function(i, l){
-						end = [l.latitude, l.longitude];
-						L.polyline([[start, end]], {color:rgba(255,0,0,transparency)}).addTo(map);
+						end = L.latLng([l.latitude, l.longitude]);
+						L.polyline([start, end], {color:'red', opacity: transparency}).addTo(map);
+console.log(transparency);
 						transparency-=step;
 						start = end;
 					});
