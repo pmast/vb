@@ -33,7 +33,7 @@
 					list = $.map(data, function(el){
 						return [[el.latitude, el.longitude]];
 					});
-					L.polyline(list, {color:'blue'}).addTo(map);
+					L.polyline(list, {color:'blue', weight: 2}).addTo(map);
 				});
 			}
 
