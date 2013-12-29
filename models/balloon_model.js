@@ -28,7 +28,7 @@ BalloonSchema.methods.getSimplifiedHistory = function (cb) {
 		h = items.map(function(el){
 			return el.location;
 		});
-		h_s = Simplify(h);
+		h_s = Simplify(h, 0.1);
 		cb(err, h_s);
 	});
 }

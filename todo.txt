@@ -22,7 +22,7 @@ Todo, virtual balloon:
 - implement more http verbs
 	- post vs. put
 - add simple idenitfier to every balloon
-	- https://npmjs.org/package/hashids
+	* https://npmjs.org/package/hashids
 - make map callable with ID get argument to only show that balloon
 - store weather information with positions history
 - make balloon history clickable
