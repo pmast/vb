@@ -57,4 +57,12 @@ BalloonSchema.statics.findByID = function(id, cb) {
 	this.find({ _id: config.hashID.decryptHex(id)}, cb);
 }
 
+BalloonSchema.methods.reduceHistory = function(){
+	if (this.history.length> config.history_size) {
+		this.history.shift();
+	} else {
+		return;
+	}
+}
+
 module.exports = mongoose.model("Balloon", BalloonSchema);

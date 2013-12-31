@@ -62,13 +62,12 @@ function rhumb(balloon, wind, cb){
     var p2 = new ll(newPos.latitude, newPos.longitude, earth_radius);
     console.log("distance 2: " + p1.rhumbDistanceTo(p2) + " m");
 
-    // l = balloon.location;
-    // balloon.history.push(l.toObject());
+    l = balloon.location;
+    balloon.history.push(l.toObject());
     balloon.location = newPos;
     // balloon.history.push(l.toObject());
 
-
-
+    balloon.reduceHistory();
     balloon.save(function(err, b, n){
         if (err) throw err;
         bh = new BalloonHistory();
