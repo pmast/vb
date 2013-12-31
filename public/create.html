@@ -4,6 +4,7 @@
   <title>Create new balloon</title>
   <!-- Leaflet -->
   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.css" />
+  <link rel="stylesheet" href="stylesheets/bootstrap-colorpicker.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Bootstrap -->
   <link href="stylesheets/bootstrap.min.css" rel="stylesheet">
@@ -15,6 +16,7 @@
   <script src="https://code.jquery.com/jquery.js"></script>
   <!-- Include all compiled plugins (below), or include individual files as needed -->
   <script src="javascript/bootstrap.min.js"></script>
+  <script src="javascript/bootstrap-colorpicker.min.js"></script>
 
   <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
 
@@ -90,34 +92,62 @@
             }
           }
         });
+        $('#pickcolor').css('background-color', $('input[name=color]').val());
+        $('#pickcolor').colorpicker({
+            format: "rgb",
+            component: $('#hans'),
+            color: $('input[name=color]').val(),
+            horizontal: true
+        }).on('changeColor', function(ev) {
+            console.log(ev);
+            ev.target.backgroundColor = ev.color.toHex();
+            $('#pickcolor').css('background-color', ev.color.toHex());
+            $('input[name=color]').val(ev.color.toHex());
+        });
+        //set center of map
+        $.getJSON('http://freegeoip.net/json/', function(data, status){
+          map.setView(new L.latLng(data.latitude, data.longitude), 5, {animate:true});
+        });
       });
 
       </script>
     </head>
     <body>
-      <h1>Create a new balloon:</h1>
+      <div class="container">
+      <div class="row">
+        <h1>Create a new balloon:</h1>
+        <form action="balloon/add" method="post" id="addBalloonForm">
+          <div class="container">
+            <div class="col-md-6">
+              <input type="text" class="form-control" placeholder="Name" name="name">
+              <br>
+              <input type="text" class="form-control" placeholder="Message" name="message">
+              <br>
+              <input type="text" class="form-control" placeholder="e-mail" name="email">
+              <br>
+              <input type="hidden" class="form-control" value="#60d16b" name="color">
+              Choose a color: <div id='pickcolor' style="width:50px; height:50px;"></div>
+              <br>
+            </div>
 
-      <form action="balloon/add" method="post" id="addBalloonForm">
-        <input type="text" class="form-control" placeholder="Name" name="name">
-        <br>
-        <input type="text" class="form-control" placeholder="Message" name="message">
-        <br>
-        <input type="text" class="form-control" placeholder="e-mail" name="email">
-        <br>
-        <div id="mapcontainer">
-          <div style="position:absolute; width:100%; height:100%; z-index: 1;" id="map"></div>
-          <div style="position:absolute; width:100%; height:100%; z-index: 99; pointer-events:none;">
-            <svg style="width:100%; height:100%; background:transparent;">
-                <circle cx="50%" cy="50%" r="10" stroke="black" stroke-width="2" fill="transparent" />
-            </svg>
+            <div id="mapcontainer" class="col-md-6">
+              <div style="position:absolute; width:100%; height:100%; z-index: 1;" id="map"></div>
+              <div style="position:absolute; width:100%; height:100%; z-index: 99; pointer-events:none;">
+                <svg style="width:100%; height:100%; background:transparent;">
+                    <circle cx="50%" cy="50%" r="10" stroke="black" stroke-width="2" fill="transparent" />
+                </svg>
+              </div>
+            </div>
           </div>
-        </div>
-        <br>
-        <button type="submit" class="btn btn-default">Submit</button>
-        <input type="hidden" class="form-control" placeholder="Longitude" name="longitude" id="longitude">
-        <input type="hidden" class="form-control" placeholder="Latitude" name="latitude" id="latitude">
-      </form>
-      <br>
-
+          <div class="container">
+            <div class="row">
+              <button type="submit" class="btn btn-default">Submit</button>
+              <input type="hidden" class="form-control" placeholder="Longitude" name="longitude" id="longitude">
+              <input type="hidden" class="form-control" placeholder="Latitude" name="latitude" id="latitude">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
     </body>
     </html>

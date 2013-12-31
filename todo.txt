@@ -1,6 +1,7 @@
 Todo, virtual balloon:
 -----------------------
 
+* add very first position to history
 - prevent dublicates in wind database
 	- http://www.sqlite.org/syntaxdiagrams.html#table-constraint
 - send status updates:

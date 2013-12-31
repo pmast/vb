@@ -1,5 +1,6 @@
 //handle balloon requests
 var Balloon = require('../models/balloon_model');
+var BalloonHistory = require('../models/balloon_history_model');
 
 
 exports.list = function(req, res){
@@ -61,17 +62,26 @@ exports.add = function(req, res){
 	var balloon = new Balloon({
 		name: req.body.name,
 		message: req.body.message,
+		color: req.body.color,
 		email: req.body.email,
 		location: {
 			longitude: req.body.longitude,
 			latitude: req.body.latitude
 		},
 	});
-	balloon.save(function(err){
+	balloon.save(function(err, b){
 		if (err){
 			return console.log(err);
 		} else {
-			return console.log('created new baloon');
+			var bh = new BalloonHistory({
+				balloonID: b._id,
+				location: b.location.toObject()
+			});
+			bh.save(function(err){
+				if (err) throw err;
+				return console.log('created new baloon');
+			});
+			
 		}
 	});
 };

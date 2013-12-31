@@ -19,21 +19,23 @@
 		-->
 		</style>
 		<script language="JavaScript">
-			function showHistory(id){
+			function showHistory(id, c){
+				var c = c || "red";
 				$.getJSON('balloon/'+id+'/history', function(data, status, code){
 					list = $.map(data, function(el){
 						return [[el.latitude, el.longitude]];
 					});
-					L.polyline(list, {color:'red', weight:2}).addTo(map);
+					L.polyline(list, {color:c, weight:2}).addTo(map);
 				});
 			}
 
-			function showFullHistory(id){
+			function showFullHistory(id, c){
+				var c = c ||"blue";
 				$.getJSON('balloon/'+id+'/full_history', function(data){
 					list = $.map(data, function(el){
 						return [[el.latitude, el.longitude]];
 					});
-					L.polyline(list, {color:'blue', weight: 2}).addTo(map);
+					L.polyline(list, {color:c, weight: 2}).addTo(map);
 				});
 			}
 
@@ -43,14 +45,14 @@
 					if (b.location.latitude == null ||
 						b.location.longitude == null) return;
 					var marker = L.marker([b.location.latitude, b.location.longitude]).addTo(map);
-					showFullHistory(b.id);
+					showFullHistory(b.id, b.color);
 					marker.bindPopup(b.name + "<br>started: " + $.format.toBrowserTimeZone(b.created, 'yyyy-M-dd HH:mm')
 						+"<br>last updated: " + $.format.toBrowserTimeZone(b.location.timestamp, 'yyyy-M-dd HH:mm') + '<br>'
-						+ '<a href="javascript:showHistory(&#39;'+b.id+'&#39;);">show history</a><br>'
-						+ '<a href="javascript:showFullHistory(&#39;'+b.id+'&#39;);">show full history</a>');
+						// + '<a href="javascript:showHistory(&#39;'+b.id+'&#39;);">show history</a><br>'
+						// + '<a href="javascript:showFullHistory(&#39;'+b.id+'&#39;);">show full history</a>'
+					);
 				}
 				$.getJSON('http://freegeoip.net/json/', function(data, status){
-					console.log(data);
 					map.setView(new L.latLng(data.latitude, data.longitude), 5, {animate:true});
 				});				
 				loadBalloons(addF);
