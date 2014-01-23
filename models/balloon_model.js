@@ -3,6 +3,7 @@ var	Schema = mongoose.Schema;
 var Simplify = require('simplify.js');
 var BalloonHistory = require('./balloon_history_model');
 var config = require('../config');
+var Location = require('./location_model');
 
 var BalloonSchema = new Schema({
 	name: String,
@@ -10,16 +11,8 @@ var BalloonSchema = new Schema({
 	email: String,
 	created: { type: Date, default: Date.now },
 	color: String,
-	location: {
-		longitude: Number,
-		latitude: Number,
-		timestamp: { type: Date, default: Date.now }
-	},
-	history: [{
-		longitude: Number,
-		latitude: Number,
-		timestamp: { type: Date, default: Date.now }
-	}]
+	location: Location,
+	history: [Location]
 });
 
 function sortHistory(a, b){

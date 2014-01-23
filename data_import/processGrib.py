@@ -57,6 +57,7 @@ def initState():
         f.close()
     except IOError:
         cs = State()
+        print "creating new state"
     return cs
     
 def saveState():
@@ -70,6 +71,12 @@ def getGrib(cs):
     # up to 192 hours in the future every 3 hours, then every 12 up to 384 hours in the future)
 
     forecast_date=cs.getDay() #What date the forecast is for yyyymmdd
+
+    print '-----------'
+    print forecast_time
+    print forecast_hours
+    print forecast_date
+    print '-----------'
 
     top_lat=90 #Top of bounding box (North)
     bottom_lat=-90 #Bottom of bounding box (South)
@@ -169,7 +176,8 @@ def storeData(grbs):
 
 
 cs = initState()
-print cs.last_check
+print "last check: %s" % cs.last_check
+print "date: %s" % cs.date
 if not cs.check():
     print "no check yet!"
     sys.exit()

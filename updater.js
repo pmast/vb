@@ -56,7 +56,12 @@ function rhumb(balloon, wind, cb){
     // check for some daft bugger going past the pole, normalise latitude if so
     if (Math.abs(lat2) > Math.PI/2) lat2 = lat2>0 ? Math.PI-lat2 : -Math.PI-lat2;
     lon2 = (lon1+dLon+Math.PI)%(2*Math.PI) - Math.PI;
-    newPos = {'longitude': toDeg(lon2), 'latitude': toDeg(lat2), timestamp: now};
+    newPos = {'longitude': toDeg(lon2),
+        'latitude': toDeg(lat2),
+        timestamp: now,
+        windspeed: wind.speed,
+        winddirection: toDeg(brng)
+    };
 
     var p1 = new ll(balloon.location.latitude, balloon.location.longitude, earth_radius);
     var p2 = new ll(newPos.latitude, newPos.longitude, earth_radius);
@@ -64,6 +69,7 @@ function rhumb(balloon, wind, cb){
 
     l = balloon.location;
     balloon.history.push(l.toObject());
+    balloon.history = balloon.history.slice(balloon.history.length - config.history_size, balloon.history.length);
     balloon.location = newPos;
     // balloon.history.push(l.toObject());
 
