@@ -47,7 +47,7 @@
 
 
 					var myIcon = L.icon({
-						iconUrl: 'images/balloon.png',
+						// iconUrl: 'images/balloon.png',
 						// iconRetinaUrl: 'my-icon@2x.png',
 						iconSize: [50, 143],
 						iconSize: [20, 52],
@@ -60,7 +60,7 @@
 					});
 					console.log(myIcon);
 					console.log(myIcon);
-					var marker = L.marker([b.location.latitude, b.location.longitude], {icon: myIcon}).addTo(map);
+					var marker = L.marker([b.location.latitude, b.location.longitude]).addTo(map);
 					showFullHistory(b.id, b.color);
 					marker.bindPopup(b.name + "<br>started: " + $.format.toBrowserTimeZone(b.created, 'yyyy-M-dd HH:mm')
 						+"<br>last updated: " + $.format.toBrowserTimeZone(b.location.timestamp, 'yyyy-M-dd HH:mm') + '<br>'
@@ -79,7 +79,7 @@
 				var map = L.map('map', {maxZoom: 15, minZoom:2}).setView([53.5, 10], 5);
 				// http://maps.vesseltracker.com/vesseltracker/{z}/{x}/{y}.png
 				// http://{s}.tile.cloudmade.com/8d1255ae36dc4decb3791bfa3f1d58cc/997/256/{z}/{x}/{y}.png
-				L.tileLayer('http://maps.vesseltracker.com/vesseltracker/{z}/{x}/{y}.png', {
+				L.tileLayer('http://{s}.tile.cloudmade.com/8d1255ae36dc4decb3791bfa3f1d58cc/997/256/{z}/{x}/{y}.png', {
 					attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
 					maxZoom: 18,
 					minZoom: 2
