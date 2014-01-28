@@ -8,7 +8,6 @@
 		<script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 		<script src="javascript/jquery-dateFormat.min.js"></script>
-		<script src="javascript/jquery.svg.min.js"></script>
 		<script src="javascript/balloon.js"></script>
 		<style type="text/css">
 		<!--
@@ -18,11 +17,15 @@
 			#map {width:100%;
 				height:100%;
 				background:transparent;}
+			.div-icon{background: transparent;
+				visibility: visible;
+				width: 0px;
+				height: 0px;
+				pointer-events: none;
+			}
 		-->
 		</style>
 		<script language="JavaScript">
-
-			var defaultColor = "darkgray";
 
 			$(document).ready(function(){
 				map = initMap();
@@ -34,42 +37,20 @@
 				});				
 				loadBalloons(addF);
 
-				svgBalloonTest(map, [53.5, 9], '#ff0000');
-				svgBalloonTest(map, [53.5, 10], '#00ff00');
-				svgBalloonTest(map, [53.5, 11], '#0000ff');
 			});
 
-			function svgBalloonTest(map, ll, color){
-				var myIcon = L.divIcon({className: 'my-div-icon'});
-				// you can set .my-div-icon styles in CSS
 
-				var m2 = L.marker(ll, {icon: myIcon}).addTo(map);
-				m2.bindPopup("<b>Hello world!</b><br>I am a popup.");
-				$(m2._icon).load('images/balloon_color.svg', function(a,b,c){
-					var svg = $(m2._icon).find('svg')[0];
-					console.log(svg);
-					svg.setAttribute('height', '50');
-					console.log($(svg).find('#color_fill')[0].setAttribute('style', 'fill:'+color+';fill-opacity:1;stroke:none'));
-				});
-			}
 
 			function initMap(){
 				var map = L.map('map', {maxZoom: 15, minZoom:2}).setView([53.5, 10], 5);
 				// http://maps.vesseltracker.com/vesseltracker/{z}/{x}/{y}.png
 				// http://{s}.tile.cloudmade.com/8d1255ae36dc4decb3791bfa3f1d58cc/997/256/{z}/{x}/{y}.png
-				L.tileLayer('http://{s}.tile.cloudmade.com/8d1255ae36dc4decb3791bfa3f1d58cc/997/256/{z}/{x}/{y}.png', {
+				L.tileLayer('http://maps.vesseltracker.com/vesseltracker/{z}/{x}/{y}.png', {
 					attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
 					maxZoom: 18,
 					minZoom: 2
 					,detectRetina: true
 				}).addTo(map);
-				// L.tileLayer('http://www.openportguide.org/tiles/actual/wind_vector/5/{z}/{x}/{y}.png', {
-				// 	attribution: 'http://www.bluewater-info.net/wiki_/Help:Weather_tiles#wind_tiles',
-				// 	maxZoom: 18,
-				// 	minZoom: 4
-				// 	,detectRetina: false
-				// }).addTo(map);
-
 
 				return map;
 			}
