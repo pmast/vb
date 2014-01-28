@@ -23,6 +23,7 @@ Balloon.prototype.highlight = function(){
 		this.line.setStyle({color: this.b.color});
 	else
 		this.line.setStyle({color: 'red'});
+		this.line.bringToFront();
 }
 
 Balloon.prototype.unhighlight = function(){
@@ -68,6 +69,7 @@ Balloon.prototype.addBalloon = function(ll){
 Balloon.prototype.addSvgBalloon = function(ll, color){
 	var myIcon = L.divIcon({
 		iconAnchor: [10, 53],
+		popupAnchor: [0, -53],
 		className: 'div-icon'
 	});
 
