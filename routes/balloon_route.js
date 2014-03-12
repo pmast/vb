@@ -11,6 +11,7 @@ exports.list = function(req, res){
 			el.id = id;
 			delete el._id;
 			delete el.history;
+			delete el.email;
 			return el;
 		});
 		res.send(result);

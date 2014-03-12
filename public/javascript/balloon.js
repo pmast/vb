@@ -1,6 +1,13 @@
-function Balloon(b, map){
+function Balloon(b, map, focus){
 	this.b = b;
 	this.map = map;
+	this.focus = focus;
+
+	if (this.focus)
+		icon_size = {height:53, width: 20};
+	else
+		icon_size = {height:26, width:10};
+
 	
 	this.defaultBalloonColor = 'steelblue';
 	this.defaultLineColor = "darkgray";
@@ -55,7 +62,7 @@ Balloon.prototype.showFullHistory = function (id, cb){
 		list = $.map(data, function(el){
 			return [[el.latitude, el.longitude]];
 		});
-		var line = L.polyline(list, {color: lineColor, weight: 2});
+		var line = L.polyline(list, {color: lineColor, weight: 1});
 		line.addTo(map);
 		cb(line);
 	});
@@ -68,8 +75,8 @@ Balloon.prototype.addBalloon = function(ll){
 
 Balloon.prototype.addSvgBalloon = function(ll, color){
 	var myIcon = L.divIcon({
-		iconAnchor: [10, 53],
-		popupAnchor: [0, -53],
+		iconAnchor: [icon_size.width/2, icon_size.height],
+		popupAnchor: [0, -icon_size.height],
 		className: 'div-icon'
 	});
 
@@ -79,8 +86,9 @@ Balloon.prototype.addSvgBalloon = function(ll, color){
 	$(marker._icon).load('images/balloon_color.svg', function(a,b,c){
 		var svg = $(marker._icon).find('svg')[0];
 		$(svg).css('pointer-events','none');
-		svg.setAttribute('height', '53');
-		svg.setAttribute('width', '20');
+		svg.setAttribute('height', icon_size.height);
+		svg.setAttribute('width', icon_size.width);
+		console.log("width: %s", svg.getAttribute('width'));
 		$(svg).find('#color_fill')[0].setAttribute('style', 'fill:'+color+';fill-opacity:1;stroke:none;pointer-events:all;');
 	});
 	return marker;

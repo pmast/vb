@@ -4,5 +4,6 @@
  */
 
 exports.index = function(req, res){
-	res.sendfile('public/index.html');
+	// res.sendfile('public/index.html');
+	res.render('index', { focus: req.params.id });
 };

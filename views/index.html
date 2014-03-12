@@ -26,15 +26,25 @@
 		-->
 		</style>
 		<script language="JavaScript">
+			var focus = '{{ focus }}';
+			console.log("focus: %s", focus);
 
 			$(document).ready(function(){
 				map = initMap();
 				var addF = function(i, b){
-					var c = new Balloon(b, map);
+					if (b.id == focus){
+						var c = new Balloon(b, map, true);
+						map.panTo(c.marker.getLatLng());
+					} else {
+						var c = new Balloon(b, map, false);
+					}
 				}
-				$.getJSON('http://freegeoip.net/json/', function(data, status){
-					map.setView(new L.latLng(data.latitude, data.longitude), 5, {animate:true});
-				});				
+				if (!focus){
+					console.log('geo center');
+					$.getJSON('http://freegeoip.net/json/', function(data, status){
+						map.setView(new L.latLng(data.latitude, data.longitude), 5, {animate:true});
+					});
+				}	
 				loadBalloons(addF);
 
 			});
