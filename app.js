@@ -40,11 +40,6 @@ app.get('/:id', routes.index);
 app.post('/balloon/add', balloon.add);
 app.post('/balloon/delete', balloon.add);
 
-app.get('/test/:name', function (req, res) {
-	console.log('haus');
-	res.render('test', { name: req.params.name });
-});
-
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
