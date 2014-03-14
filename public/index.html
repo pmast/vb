@@ -8,6 +8,7 @@
 		<script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 		<script src="javascript/jquery-dateFormat.min.js"></script>
+		<script src="javascript/jquery.ba-bbq.min.js"></script>
 		<script src="javascript/balloon.js"></script>
 		<style type="text/css">
 		<!--
@@ -26,17 +27,20 @@
 		-->
 		</style>
 		<script language="JavaScript">
-			var focus = '{{ focus }}';
-			console.log("focus: %s", focus);
+			var focus = $.param.fragment();
+			focus = focus==''?false:focus;
+			var balloons = {};
 
 			$(document).ready(function(){
-				map = initMap();
-				var addF = function(i, b){
+				var map = initMap();
+				Balloon.prototype.map = map;
+
+				var addF = function(i, b, svg){
 					if (b.id == focus){
-						var c = new Balloon(b, map, true);
-						map.panTo(c.marker.getLatLng());
+						balloons[b.id] = new Balloon(b, svg, true);
+						balloons[b.id].center();
 					} else {
-						var c = new Balloon(b, map, false);
+						balloons[b.id] = new Balloon(b, svg, false);
 					}
 				}
 				if (!focus){
@@ -46,7 +50,6 @@
 					});
 				}	
 				loadBalloons(addF);
-
 			});
 
 
@@ -66,11 +69,15 @@
 			}
 
 			function loadBalloons(add){
-				$.getJSON("balloons", function(data, status){
-					$.each(data, add);
-				});
-			};
+				$.get('images/balloon_color.svg', function(svg){
+					$.getJSON("balloons", function(data, status){
+						$.each(data, function(i, b){
+							add(i,b,svg);
+						});
 
+					});
+				}, 'text');
+			};
 		
 
 		</script>

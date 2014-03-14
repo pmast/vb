@@ -30,13 +30,11 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
 app.get('/users', user.list);
 app.get('/balloons', balloon.list);
 app.get('/balloon/:id/history', balloon.history);
 app.get('/balloon/:id/full_history', balloon.full_history);
 app.get('/balloon/:id', balloon.show);
-app.get('/:id', routes.index);
 app.post('/balloon/add', balloon.add);
 app.post('/balloon/delete', balloon.add);
 

@@ -1,12 +1,12 @@
-function Balloon(b, map, focus){
+function Balloon(b, icon, focus){
 	this.b = b;
-	this.map = map;
 	this.focus = focus;
+	this.icon = icon;
 
 	if (this.focus)
-		icon_size = {height:53, width: 20};
+		this.icon_size = [20,53];
 	else
-		icon_size = {height:26, width:10};
+		this.icon_size = [10,26];
 
 	
 	this.defaultBalloonColor = 'steelblue';
@@ -19,10 +19,10 @@ function Balloon(b, map, focus){
 	
 	this.marker.bindPopup(b.name + "<br>started: " + $.format.toBrowserTimeZone(b.created, 'yyyy-M-dd HH:mm')
 		+"<br>last updated: " + $.format.toBrowserTimeZone(b.location.timestamp, 'yyyy-M-dd HH:mm') + '<br>'
-		);
+		+'<a href="javascript:balloons.'+this.b.id+'.showFullHistory()">show path</a><br>'
+		+'<a href="'+window.location.protocol + "//" + window.location.host + "/#" + this.b.id + '">link to this balloon</a>');
 
-	this.showFullHistory(b.id, this.addLine.bind(this));
-
+	
 }	
 
 Balloon.prototype.highlight = function(){
@@ -47,24 +47,28 @@ Balloon.prototype.addLine = function(line){
 }
 
 Balloon.prototype.showHistory = function(id, c){
+
 	var c = c || "red";
 	$.getJSON('balloon/'+id+'/history', function(data, status, code){
 		list = $.map(data, function(el){
 			return [[el.latitude, el.longitude]];
 		});
-		L.polyline(list, {color:c, weight:2}).addTo(map);
+		L.polyline(list, {color:c, weight:2}).addTo(this.map);
 	});
 }
 
-Balloon.prototype.showFullHistory = function (id, cb){
+Balloon.prototype.showFullHistory = function (){
+	// cb = this.addLine.bind(this);
 	var lineColor = this.defaultLineColor;
-	$.getJSON('balloon/'+id+'/full_history', function(data){
+	map = this.map;
+	that = this;
+	$.getJSON('balloon/'+this.b.id+'/full_history', function(data){
 		list = $.map(data, function(el){
 			return [[el.latitude, el.longitude]];
 		});
 		var line = L.polyline(list, {color: lineColor, weight: 1});
 		line.addTo(map);
-		cb(line);
+		that.addLine(line);
 	});
 }
 
@@ -75,21 +79,23 @@ Balloon.prototype.addBalloon = function(ll){
 
 Balloon.prototype.addSvgBalloon = function(ll, color){
 	var myIcon = L.divIcon({
-		iconAnchor: [icon_size.width/2, icon_size.height],
-		popupAnchor: [0, -icon_size.height],
-		className: 'div-icon'
+		iconAnchor: [this.icon_size[0]/2,this.icon_size[1]],
+		iconSize: this.icon_size,
+		popupAnchor: [0, -this.icon_size[1]-2],
+		className: 'div-icon',
+		html: this.icon
 	});
 
 	var marker = L.marker(ll, {icon: myIcon});
 	marker.addTo(this.map);
-	marker.bindPopup("<b>Hello world!</b><br>I am a popup.");
-	$(marker._icon).load('images/balloon_color.svg', function(a,b,c){
-		var svg = $(marker._icon).find('svg')[0];
-		$(svg).css('pointer-events','none');
-		svg.setAttribute('height', icon_size.height);
-		svg.setAttribute('width', icon_size.width);
-		console.log("width: %s", svg.getAttribute('width'));
-		$(svg).find('#color_fill')[0].setAttribute('style', 'fill:'+color+';fill-opacity:1;stroke:none;pointer-events:all;');
-	});
+
+	var svg = $(marker._icon).find('svg')[0];
+	$(svg).css('pointer-events','none');
+	$(svg).find('#color_fill')[0].setAttribute('style', 'fill:'+color+';fill-opacity:1;stroke:none;pointer-events:all;');
 	return marker;
 }
+
+Balloon.prototype.center = function(){
+	this.map.panTo(this.marker.getLatLng());
+}
+
