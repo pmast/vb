@@ -38,8 +38,7 @@
 				var addF = function(i, b, svg){
 					if (b.id == focus){
 						balloons[b.id] = new Balloon(b, svg, true);
-						balloons[b.id].center();
-						balloons[b.id].showFullHistory();
+						balloons[b.id].highlight();
 					} else {
 						balloons[b.id] = new Balloon(b, svg, false);
 					}
@@ -51,6 +50,12 @@
 					});
 				}	
 				loadBalloons(addF);
+
+				$(window).bind( 'hashchange', function(e) {
+					focus = $.param.fragment();
+					focus = focus==''?false:focus;
+					balloons[focus].highlight();
+				});
 			});
 
 
