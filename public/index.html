@@ -88,12 +88,12 @@
 				$('#popo').popover('show');
 				window.setTimeout(function(){
 					$('#popo').popover('hide');
-				}, 7000);
+				}, 5000);
 			}
 
 
 			function initMap(){
-				var map = L.map('map', {maxZoom: 15, minZoom:2}).setView([0, 0], 1);
+				var map = L.map('map', {maxZoom: 15, minZoom:2}).setView([30, 0], 1);
 				L.tileLayer('http://maps.vesseltracker.com/vesseltracker/{z}/{x}/{y}.png', {
 					attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
 					maxZoom: 18
