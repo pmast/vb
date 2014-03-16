@@ -17,10 +17,12 @@ function Balloon(b, icon, focus){
 
 	this.marker = this.addBalloon([b.location.latitude, b.location.longitude]);
 	
-	this.marker.bindPopup(b.name + "<br>started: " + $.format.toBrowserTimeZone(b.created, 'yyyy-M-dd HH:mm')
+	this.marker.bindPopup("<b>" + b.name + "</b><br>"
+		+ b.message + "<br>"
+		+"<br>started: " + $.format.toBrowserTimeZone(b.created, 'yyyy-M-dd HH:mm')
 		+"<br>last updated: " + $.format.toBrowserTimeZone(b.location.timestamp, 'yyyy-M-dd HH:mm') + '<br>'
-		+'<a href="javascript:balloons.'+this.b.id+'.showFullHistory()">show path</a><br>'
-		+'<a href="'+window.location.protocol + "//" + window.location.host + "/#" + this.b.id + '">link to this balloon</a>');
+		+'<a href="javascript:balloons[\''+this.b.id+'\'].showFullHistory();">show path</a><br>'
+		+'link to this balloon:<br><a href="'+window.location.protocol + "//" + window.location.host + "/#" + this.b.id + '">'+window.location.protocol + "//" + window.location.host + "/#" + this.b.id+'</a>');
 
 	
 }	

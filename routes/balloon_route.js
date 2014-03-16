@@ -59,7 +59,6 @@ exports.full_history = function(req, res){
 exports.add = function(req, res){
 	console.log(req);
 	console.log(req.body);
-	res.redirect("index.html");
 	var balloon = new Balloon({
 		name: req.body.name,
 		message: req.body.message,
@@ -72,8 +71,10 @@ exports.add = function(req, res){
 	});
 	balloon.save(function(err, b){
 		if (err){
+			res.redirect("index.html");
 			return console.log(err);
 		} else {
+			res.redirect("index.html#" + b.getHashID());
 			var bh = new BalloonHistory({
 				balloonID: b._id,
 				location: b.location.toObject()

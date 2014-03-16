@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html>
 <head>
   <title>Create new balloon</title>
@@ -30,6 +30,11 @@
     #mapcontainer{position:relative;
       width:500px;
       height:500px;
+    }
+
+    .popover{max-width:600px;
+      width:250px;
+
     }
   </style>
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -108,6 +113,8 @@
         $.getJSON('http://freegeoip.net/json/', function(data, status){
           map.setView(new L.latLng(data.latitude, data.longitude), 5, {animate:true});
         });
+
+        $('.popo').popover();
       });
 
       </script>
@@ -119,14 +126,25 @@
         <form action="balloon/add" method="post" id="addBalloonForm">
           <div class="container">
             <div class="col-md-6">
-              <input type="text" class="form-control" placeholder="Name" name="name">
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Name" name="name">
+                <span class="input-group-addon popo" id="info" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Give your balloon a name."><span class="glyphicon glyphicon-info-sign"></span></span>
+              </div>
               <br>
-              <input type="text" class="form-control" placeholder="Message" name="message">
+              
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Message" name="message">
+                <span class="input-group-addon popo" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Attach a message to your balloon."><span class="glyphicon glyphicon-info-sign"></span></span>
+              </div>
+
               <br>
-              <input type="text" class="form-control" placeholder="e-mail" name="email">
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="e-mail" name="email">
+                <span class="input-group-addon popo" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Enter you remail address to receive updates about your balloon (not implemented yet)."><span class="glyphicon glyphicon-info-sign"></span></span>
+              </div>
               <br>
               <input type="hidden" class="form-control" value="#60d16b" name="color">
-              Choose a color: <div id='pickcolor' style="width:50px; height:50px;"></div>
+              Choose a color: <a href="#"><div id='pickcolor' style="width:50px; height:50px;"></div></a>
               <br>
             </div>
 
@@ -140,7 +158,7 @@
             </div>
           </div>
           <div class="container">
-            <div class="row">
+            <div class="col-md-12">
               <button type="submit" class="btn btn-default">Submit</button>
               <input type="hidden" class="form-control" placeholder="Longitude" name="longitude" id="longitude">
               <input type="hidden" class="form-control" placeholder="Latitude" name="latitude" id="latitude">
