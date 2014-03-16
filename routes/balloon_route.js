@@ -74,7 +74,7 @@ exports.add = function(req, res){
 			res.redirect("index.html");
 			return console.log(err);
 		} else {
-			res.redirect("index.html#" + b.getHashID());
+			res.redirect("index.html?new=true#" + b.getHashID());
 			var bh = new BalloonHistory({
 				balloonID: b._id,
 				location: b.location.toObject()

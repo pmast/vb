@@ -1,7 +1,13 @@
 <html>
 	<head>
 		<title>virtual balloon</title>
+
+		<!-- Bootstrap -->
+		<link href="stylesheets/bootstrap.min.css" rel="stylesheet">
+  		<link href="stylesheets/bootstrap-theme.min.css" rel="stylesheet">
+  		<!-- Leaflet -->
 		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+
 		<!--[if lte IE 8]>
 			<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css" />
 		<![endif]-->
@@ -10,6 +16,10 @@
 		<script src="javascript/jquery-dateFormat.min.js"></script>
 		<script src="javascript/jquery.ba-bbq.min.js"></script>
 		<script src="javascript/balloon.js"></script>
+
+		<!-- Bootstrap JS plugins -->
+		<script src="javascript/bootstrap.min.js"></script>
+
 		<style type="text/css">
 		<!--
 			html{width:100%;
@@ -24,6 +34,11 @@
 				height: 0px;
 				pointer-events: none;
 			}
+			.popover{
+				width:370px;
+				max-width:600px;
+			}
+
 		-->
 		</style>
 		<script language="JavaScript">
@@ -56,8 +71,25 @@
 					focus = focus==''?false:focus;
 					balloons[focus].highlight();
 				});
+
+				var query = $.deparam.querystring();
+
+
+				
+				if (query.new && query.new == 'true'){
+					showBookmarkPopover();
+					delete query.new;
+					var new_query = $.param.querystring(window.location.href, query, 2);
+					window.history.replaceState( {} , document.title, new_query);
+				}
 			});
 
+			function showBookmarkPopover(){
+				$('#popo').popover('show');
+				window.setTimeout(function(){
+					$('#popo').popover('hide');
+				}, 7000);
+			}
 
 
 			function initMap(){
@@ -86,6 +118,7 @@
 		</script>
 	</head>
 	<body>
+		<span id="popo" data-toggle="popover" data-placement="bottom" data-content="Save or bookmark this URL to return to your balloon." style="position:absolute; top:0px; left:0px; background:red; width:100%; height:0px;"></span>
 		<div id="map"></div>
 	</body>
 </html>

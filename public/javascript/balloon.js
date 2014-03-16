@@ -14,8 +14,6 @@ function Balloon(b, iconSource, focus){
 		html: this.iconSource
 	});
 
-	console.log(this._smallIcon);
-
 	this._bigIcon = this.icon = L.divIcon({
 		iconAnchor: [bigSize[0]/2,bigSize[1]],
 		iconSize: bigSize,
