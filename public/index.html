@@ -39,6 +39,7 @@
 					if (b.id == focus){
 						balloons[b.id] = new Balloon(b, svg, true);
 						balloons[b.id].center();
+						balloons[b.id].showFullHistory();
 					} else {
 						balloons[b.id] = new Balloon(b, svg, false);
 					}

@@ -4,7 +4,7 @@ function Balloon(b, icon, focus){
 	this.icon = icon;
 
 	if (this.focus)
-		this.icon_size = [20,53];
+		this.icon_size = [20*0.75,53*0.75];
 	else
 		this.icon_size = [10,26];
 
@@ -39,15 +39,6 @@ Balloon.prototype.unhighlight = function(){
 	this.line.setStyle({color: this.defaultLineColor});
 }
 
-Balloon.prototype.addLine = function(line){
-	this.line = line;
-	
-	line.on('mouseover', this.highlight.bind(this));
-	line.on('mouseout', this.unhighlight.bind(this));
-	this.marker.on('mouseover', this.highlight.bind(this));
-	this.marker.on('mouseout', this.unhighlight.bind(this));
-}
-
 Balloon.prototype.showHistory = function(id, c){
 
 	var c = c || "red";
@@ -60,17 +51,14 @@ Balloon.prototype.showHistory = function(id, c){
 }
 
 Balloon.prototype.showFullHistory = function (){
-	// cb = this.addLine.bind(this);
-	var lineColor = this.defaultLineColor;
-	map = this.map;
+	var lineColor = this.b.color || this.defaultBalloonColor;
 	that = this;
+
 	$.getJSON('balloon/'+this.b.id+'/full_history', function(data){
 		list = $.map(data, function(el){
 			return [[el.latitude, el.longitude]];
 		});
-		var line = L.polyline(list, {color: lineColor, weight: 1.5});
-		line.addTo(map);
-		that.addLine(line);
+		L.polyline(list, {color: lineColor, weight: 1.5, clickable:false}).addTo(that.map);
 	});
 }
 
