@@ -4,7 +4,7 @@ var Location = require('./location_model');
 
 
 var BalloonSchema = new Schema({
-	balloonID: Schema.Types.ObjectId,
+	balloonID: { type: Schema.Types.ObjectId, index: true },
 	location: Location
 });
 
