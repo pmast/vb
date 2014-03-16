@@ -68,7 +68,7 @@ Balloon.prototype.showFullHistory = function (){
 		list = $.map(data, function(el){
 			return [[el.latitude, el.longitude]];
 		});
-		var line = L.polyline(list, {color: lineColor, weight: 1});
+		var line = L.polyline(list, {color: lineColor, weight: 1.5});
 		line.addTo(map);
 		that.addLine(line);
 	});
@@ -100,4 +100,3 @@ Balloon.prototype.addSvgBalloon = function(ll, color){
 Balloon.prototype.center = function(){
 	this.map.panTo(this.marker.getLatLng());
 }
-
