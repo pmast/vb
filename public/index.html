@@ -43,12 +43,12 @@
 						balloons[b.id] = new Balloon(b, svg, false);
 					}
 				}
-				if (!focus){
-					console.log('geo center');
-					$.getJSON('http://freegeoip.net/json/', function(data, status){
-						map.panTo(new L.latLng(data.latitude, data.longitude));
-					});
-				}	
+				// if (!focus){
+				// 	console.log('geo center');
+				// 	$.getJSON('http://freegeoip.net/json/', function(data, status){
+				// 		map.panTo(new L.latLng(data.latitude, data.longitude));
+				// 	});
+				// }	
 				loadBalloons(addF);
 
 				$(window).bind( 'hashchange', function(e) {
@@ -61,11 +61,10 @@
 
 
 			function initMap(){
-				var map = L.map('map', {maxZoom: 15, minZoom:2}).setView([53.5, 10], 3);
+				var map = L.map('map', {maxZoom: 15, minZoom:2}).setView([0, 0], 1);
 				L.tileLayer('http://maps.vesseltracker.com/vesseltracker/{z}/{x}/{y}.png', {
 					attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
-					maxZoom: 18,
-					minZoom: 2
+					maxZoom: 18
 					,detectRetina: true
 				}).addTo(map);
 

@@ -103,5 +103,5 @@ Balloon.prototype.addSvgBalloon = function(ll, color){
 }
 
 Balloon.prototype.center = function(){
-	this.map.panTo(this.marker.getLatLng());
+	this.map.setView(this.marker.getLatLng(), 3);
 }
