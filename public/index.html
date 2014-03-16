@@ -46,7 +46,7 @@
 				if (!focus){
 					console.log('geo center');
 					$.getJSON('http://freegeoip.net/json/', function(data, status){
-						map.setView(new L.latLng(data.latitude, data.longitude), 5, {animate:true});
+						map.panTo(new L.latLng(data.latitude, data.longitude));
 					});
 				}	
 				loadBalloons(addF);
