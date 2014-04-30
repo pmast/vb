@@ -9,6 +9,7 @@ var BalloonSchema = new Schema({
 	name: String,
 	message: String,
 	email: String,
+	events: Boolean,
 	created: { type: Date, default: Date.now },
 	color: String,
 	location: Location,
@@ -51,11 +52,11 @@ BalloonSchema.statics.findByID = function(id, cb) {
 }
 
 BalloonSchema.methods.reduceHistory = function(){
-	if (this.history.length> config.history_size) {
+	while (this.history.length > config.history_size){
+		console.log(l.shift());
 		this.history.shift();
-	} else {
-		return;
-	}
+	};
+	return;
 }
 
 module.exports = mongoose.model("Balloon", BalloonSchema);

@@ -1,17 +1,24 @@
 var path = require('path');
 var config = require('./config');
 var sqlite3 = require("sqlite3").verbose();
-var db = new sqlite3.Database('data/weather_data.db');
-var async = require('async');
-var query = db.prepare("select case when longitude > 180 then longitude-360 else longitude end as longitude, latitude, speed, direction, time ,forecast from wind where time > datetime('now') and longitude in (?, ?) and latitude in (?, ?) order by time asc, forecast asc, longitude asc, latitude asc limit ?;");
-
 var mongoose = require('mongoose');
+var async = require('async');
+
+// importing the events
+var ew = require('./events/event_worker.js');
+require('./events/events.js');
+
+// preparing the mongoose connection
 mongoose.connection.on('disconnected', function () {
   console.log('Mongoose default connection disconnected');
 });
 mongoose.connection.on("error", function(errorObject){
   console.log(errorObject);
 });
+
+// preparing the sqlite DB and prepare the query
+var db = new sqlite3.Database('data/weather_data.db');
+var query = db.prepare("select case when longitude > 180 then longitude-360 else longitude end as longitude, latitude, speed, direction, time ,forecast from wind where time > datetime('now') and longitude in (?, ?) and latitude in (?, ?) order by time asc, forecast asc, longitude asc, latitude asc limit ?;");
 
 
 mongoose.connect('mongodb://localhost/vb');
@@ -79,10 +86,11 @@ function rhumb(balloon, wind, cb){
         bh = new BalloonHistory();
         bh.balloonID = b._id;
         bh.location = b.location.toObject();
-        bh.save(function(err, b, n){
+        bh.save(function(err, h, n){
             if (err) throw err;
-            cb();    
+            ew.check(b, cb);
         });
+
         return console.log(balloon.name + ' saved.');
     });
 }
@@ -161,8 +169,11 @@ function getWind(balloon, cb){
 
 
 Balloon.find(function(err, balloons) {
-	async.each(balloons, getWind, function(err){
-		if (err) throw err;
-		mongoose.disconnect();
-	});
+	async.each(balloons, getWind, end);
 });
+
+function end(err){
+        if (err) throw err;
+        mongoose.disconnect();
+        ew.close();
+}
