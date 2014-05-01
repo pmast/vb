@@ -32,10 +32,15 @@ function EventWorker(){
 		results = [];
 		this.events.forEach(function(event){
 			console.log("checking event %s", event.title);
-			results.push(event.check(balloon));
+			var result = event.check(balloon)
+			if (result){
+				results.push(result);
+			}
 		});
 		console.log("results for balloon %s: %s", balloon.name, results);
-		this.mailEvents(balloon, results, cb);
+		if (results.length > 0){
+			this.mailEvents(balloon, results, cb);
+		}
 	};
 
 	this.mailEvents = function(b, events, cb){
