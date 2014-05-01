@@ -1,5 +1,5 @@
 // event tester
-require("./event_tester.js");
+// require("./event_tester.js");
 
 // equator event
 require("./equator.js");
