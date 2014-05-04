@@ -12,16 +12,18 @@ require('./events/events.js');
 mongoose.connection.on('disconnected', function () {
   console.log('Mongoose default connection disconnected');
 });
-mongoose.connection.on("error", function(errorObject){
-  console.log(errorObject);
-});
 
 // preparing the sqlite DB and prepare the query
 var db = new sqlite3.Database('data/weather_data.db');
 var query = db.prepare("select case when longitude > 180 then longitude-360 else longitude end as longitude, latitude, speed, direction, time ,forecast from wind where time > datetime('now') and longitude in (?, ?) and latitude in (?, ?) order by time asc, forecast asc, longitude asc, latitude asc limit ?;");
 
 
-mongoose.connect('mongodb://localhost/vb');
+mongoose.connect('mongodb://localhost/vb', function(err){
+    if (err) {
+        end();
+        throw err;
+    }
+});
 var Balloon = require('./models/balloon_model');
 var BalloonHistory = require('./models/balloon_history_model');
 
@@ -173,7 +175,11 @@ Balloon.find(function(err, balloons) {
 });
 
 function end(err){
-        if (err) throw err;
-        mongoose.disconnect();
-        ew.close();
+    if (err) throw err;
+    query.finalize();
+    db.close();
+
+    mongoose.disconnect();
+    ew.close();
+    console.log("end function");
 }
