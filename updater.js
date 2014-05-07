@@ -179,6 +179,7 @@ function end(err){
     query.finalize();
     db.close();
 
+    //mongoose.connection.close();
     mongoose.disconnect();
     ew.close();
     console.log("end function");
