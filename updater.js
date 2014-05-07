@@ -5,8 +5,8 @@ var mongoose = require('mongoose');
 var async = require('async');
 
 // importing the events
-var ew = require('./events/event_worker.js');
-require('./events/events.js');
+// var ew = require('./events/event_worker.js');
+// require('./events/events.js');
 
 // preparing the mongoose connection
 mongoose.connection.on('disconnected', function () {
@@ -90,7 +90,8 @@ function rhumb(balloon, wind, cb){
         bh.location = b.location.toObject();
         bh.save(function(err, h, n){
             if (err) throw err;
-            ew.check(b, cb);
+            // ew.check(b, cb);
+            cb();
         });
 
         return console.log(balloon.name + ' saved.');
@@ -181,6 +182,6 @@ function end(err){
 
     //mongoose.connection.close();
     mongoose.disconnect();
-    ew.close();
+    // ew.close();
     console.log("end function");
 }
