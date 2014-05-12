@@ -42,9 +42,30 @@ exports.history = function(req, res){
 
 exports.full_history = function(req, res){
 	Balloon.findByID(req.params.id, function(err, balloons){
+		var a = new Date();
 		if (err) throw err;
 		if (balloons.length==1){
 			balloons[0].getFullHistory(function(err, result){
+				var b = new Date();
+				console.log("%s", b-a);
+				if (err) throw err;
+				res.send(result);
+			})
+		} else {
+			console.log('error (length: '+balloons.length+')');
+			res.send({});
+		}
+	});
+};
+
+exports.full_history_slow = function(req, res){
+	Balloon.findByID(req.params.id, function(err, balloons){
+		var a = new Date();
+		if (err) throw err;
+		if (balloons.length==1){
+			balloons[0].getFullHistorySlow(function(err, result){
+				var b = new Date();
+				console.log("%s", b-a);
 				if (err) throw err;
 				res.send(result);
 			})

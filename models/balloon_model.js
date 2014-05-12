@@ -5,6 +5,9 @@ var BalloonHistory = require('./balloon_history_model');
 var config = require('../config');
 var Location = require('./location_model');
 
+var MongoClient = require('mongodb').MongoClient
+
+
 var BalloonSchema = new Schema({
 	name: String,
 	message: String,
@@ -23,7 +26,7 @@ function sortHistory(a, b){
 }
 
 BalloonSchema.methods.getSimplifiedHistory = function (cb) {
-	return BalloonHistory.find({balloonID: this._id}, 'location', {sort: {'location.timestamp': 1}}, function(err, items){
+	return BalloonHistory.find({balloonID: this._id}, 'location', {sort: {'location.timestamp': 1}}).lean().exec(function(err, items){
 		console.log(items.length + " history items");
 		h = items.map(function(el){
 			return el.location;
@@ -33,12 +36,27 @@ BalloonSchema.methods.getSimplifiedHistory = function (cb) {
 	});
 }
 
+
 BalloonSchema.methods.getFullHistory = function (cb) {
-	return BalloonHistory.find({balloonID: this._id}, 'location', {sort: {'location.timestamp': 1}}, function(err, items){
+	var a = new Date();
+	return BalloonHistory.find({balloonID: this._id}, {'location': 1, '_id': 0}, {sort: {'location.timestamp': 1}}).lean().exec(function(err, items){
 		console.log(items.length + " history items");
 		items = items.map(function(el){
 			return el.location;
 		});
+		console.log(new Date() - a);
+		cb(err, items);
+	});
+}
+
+BalloonSchema.methods.getFullHistorySlow = function (cb) {
+	var a = new Date();
+	return BalloonHistory.find({balloonID: this._id}, {'location': 1, '_id': 0}, {sort: {'location.timestamp': 1}}).exec(function(err, items){
+		console.log(items.length + " history items");
+		items = items.map(function(el){
+			return el.location;
+		});
+		console.log(new Date() - a);
 		cb(err, items);
 	});
 }
