@@ -5,9 +5,6 @@ var BalloonHistory = require('./balloon_history_model');
 var config = require('../config');
 var Location = require('./location_model');
 
-var MongoClient = require('mongodb').MongoClient
-
-
 var BalloonSchema = new Schema({
 	name: String,
 	message: String,
