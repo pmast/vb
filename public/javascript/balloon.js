@@ -45,6 +45,7 @@ function Balloon(b, iconSource, focus){
 		+'<a href="javascript:balloons[\''+this.b.id+'\'].showFullHistory();">show path</a><br>'
 		+'<a href="javascript:balloons[\''+this.b.id+'\'].showFullHistorySlow();">show path (slow)</a><br>'
 		+'<a href="javascript:balloons[\''+this.b.id+'\'].showHistory();">show reduced path</a><br>'
+		+'<a href="javascript:balloons[\''+this.b.id+'\'].showHistorySuperFast();">show super fast history</a><br>'
 		+'link to this balloon:<br><a href="'+window.location.protocol + "//" + window.location.host + "/#" + this.b.id + '">'+window.location.protocol + "//" + window.location.host + "/#" + this.b.id+'</a>');
 
 	
@@ -70,6 +71,18 @@ Balloon.prototype.showHistory = function(){
 	that = this;
 
 	$.getJSON('balloon/'+this.b.id+'/history', function(data, status, code){
+		list = $.map(data, function(el){
+			return [[el.latitude, el.longitude]];
+		});
+		L.polyline(list, {color:lineColor, weight:2}).addTo(that.map);
+	});
+}
+
+Balloon.prototype.showHistorySuperFast = function(){
+	var lineColor = this.b.color || this.defaultBalloonColor;
+	that = this;
+
+	$.getJSON('balloon/'+this.b.id+'/full_history_super_fast', function(data, status, code){
 		list = $.map(data, function(el){
 			return [[el.latitude, el.longitude]];
 		});
