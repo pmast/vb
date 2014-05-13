@@ -1,0 +1,40 @@
+doctype html
+html
+  head
+    title balloons admin
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel="stylesheet", href="/stylesheets/bootstrap.min.css")
+    link(rel="stylesheet", href="/stylesheets/bootstrap-theme.min.css")
+    link(rel="stylesheet", href="/stylesheets/bootstrap-sortable.css")
+    
+    script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js")
+    // script(src="/javascript/jquery.tablecloth.js")
+    // script(src="/javascript/jquery.tablesorter.min.js")
+    // script(src="/javascript/jquery-dateFormat.min.js")
+    script(src="/javascript/bootstrap.min.js")
+    script(src="/javascript/bootstrap-sortable.js")
+    // script(src="/javascript/moment.min.js")
+
+
+  body
+    h1 balloons admin
+    //- div(style="width:2000px;")
+    table.table.table-striped.table-hover.sortable
+      thead
+        th color
+        th name
+        th message
+        //- th email
+        th creation date
+        th link
+      tbody
+        each b in balloons
+          tr
+            td
+              div(style="width:20px; height:20px; background:#{b.color}")
+            td= b.name
+            td= b.message
+            //- td= b.email
+            td #{b.d} (#{b.d2})
+            td
+              a(href='http://#{domain}/##{b.linkID}') link
