@@ -25,7 +25,7 @@ html
         th name
         th message
         //- th email
-        th creation date
+        th(data-defaultsort="desc") creation date
         th link
       tbody
         each b in balloons
@@ -37,4 +37,4 @@ html
             //- td= b.email
             td #{b.d} (#{b.d2})
             td
-              a(href='http://#{domain}/##{b.linkID}') link
+              a(href='/##{b.linkID}') link

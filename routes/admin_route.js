@@ -3,7 +3,7 @@ var Balloon = require('../models/balloon_model');
 var moment = require('moment');
 
 exports.balloons = function(req, res){
-	Balloon.find(function(err, bs) {
+	Balloon.find().sort({"created": -1}).exec(function(err, bs) {
 		bs = bs.map(function(b){
 			b.linkID = b.getHashID();
 			b.d = moment(new Date(b.created)).format('YYYY-MM-DD HH:mm');
