@@ -37,11 +37,9 @@ BalloonSchema.methods.getSimplifiedHistory = function (cb) {
 BalloonSchema.methods.getFullHistory = function (cb) {
 	var a = new Date();
 	return BalloonHistory.find({balloonID: this._id}, {'location': 1, '_id': 0}, {sort: {'location.timestamp': 1}}).lean().exec(function(err, items){
-		console.log(items.length + " history items");
 		items = items.map(function(el){
 			return el.location;
 		});
-		console.log(new Date() - a);
 		cb(err, items);
 	});
 }
@@ -63,7 +61,7 @@ BalloonSchema.methods.getHashID = function(){
 }
 
 BalloonSchema.statics.findByID = function(id, cb) {
-	this.find({ _id: config.hashID.decryptHex(id)}, cb);
+	this.findOne({ _id: config.hashID.decryptHex(id)}, cb);
 }
 
 BalloonSchema.methods.reduceHistory = function(){

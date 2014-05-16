@@ -44,6 +44,7 @@ app.get('/balloon/:id', balloon.show);
 app.post('/balloon/add', balloon.add);
 app.post('/balloon/delete', balloon.add);
 app.get('/admin/balloons', admin.balloons);
+app.get('/admin/balloon/:id', admin.balloon);
 app.get('/test', function(req, res){
 	res.render('index', { title: 'Express' });
 });

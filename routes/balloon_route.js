@@ -26,73 +26,53 @@ exports.show = function(req, res){
 };
 
 exports.history = function(req, res){
-	Balloon.findByID(req.params.id, function(err, balloons){
+	Balloon.findByID(req.params.id, function(err, balloon){
 		if (err) throw err;
-		if (balloons.length==1){
-			balloons[0].getSimplifiedHistory(function(err, result){
-				if (err) throw err;
-				res.send(result);
-			})
-		} else {
-			console.log('error (length: '+balloons.length+')');
-			res.send({});
-		}
+		balloon.getSimplifiedHistory(function(err, result){
+			if (err) throw err;
+			res.send(result);
+		});
 	});
 };
 
 exports.full_history = function(req, res){
-	Balloon.findByID(req.params.id, function(err, balloons){
+	Balloon.findByID(req.params.id, function(err, balloon){
 		var a = new Date();
 		if (err) throw err;
-		if (balloons.length==1){
-			balloons[0].getFullHistory(function(err, result){
-				var b = new Date();
-				console.log("%s", b-a);
-				if (err) throw err;
-				res.send(result);
-			})
-		} else {
-			console.log('error (length: '+balloons.length+')');
-			res.send({});
-		}
+		balloon.getFullHistory(function(err, result){
+			var b = new Date();
+			console.log("%s", b-a);
+			if (err) throw err;
+			res.send(result);
+		});
 	});
 };
 
 exports.full_history_super_fast = function(req, res){
-	Balloon.findByID(req.params.id, function(err, balloons){
+	Balloon.findByID(req.params.id, function(err, balloon){
 		var a = new Date();
 		if (err) throw err;
-		if (balloons.length==1){
-			balloons[0].getSimplifiedHistory(function(err, result){
-				var b = new Date();
-				console.log("%s", b-a);
-				if (err) throw err;
-				// res.send(result);
-				res.setHeader('Content-Type', 'application/json');
-				res.end(JSON.stringify(result));
-			})
-		} else {
-			console.log('error (length: '+balloons.length+')');
-			res.send({});
-		}
+		balloon.getSimplifiedHistory(function(err, result){
+			var b = new Date();
+			console.log("%s", b-a);
+			if (err) throw err;
+			// res.send(result);
+			res.setHeader('Content-Type', 'application/json');
+			res.end(JSON.stringify(result));
+		});
 	});
 };
 
 exports.full_history_slow = function(req, res){
-	Balloon.findByID(req.params.id, function(err, balloons){
+	Balloon.findByID(req.params.id, function(err, balloon){
 		var a = new Date();
 		if (err) throw err;
-		if (balloons.length==1){
-			balloons[0].getFullHistorySlow(function(err, result){
-				var b = new Date();
-				console.log("%s", b-a);
-				if (err) throw err;
-				res.send(result);
-			})
-		} else {
-			console.log('error (length: '+balloons.length+')');
-			res.send({});
-		}
+		balloon.getFullHistorySlow(function(err, result){
+			var b = new Date();
+			console.log("%s", b-a);
+			if (err) throw err;
+			res.send(result);
+		});
 	});
 };
 

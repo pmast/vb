@@ -1,0 +1,61 @@
+doctype html
+html
+  head
+    title balloon '#{b.name}'
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel="stylesheet", href="/stylesheets/bootstrap.min.css")
+    link(rel="stylesheet", href="/stylesheets/bootstrap-theme.min.css")
+    link(rel="stylesheet", href="/stylesheets/bootstrap-sortable.css")
+    
+    script(src="/javascript/jquery-1.7.2.min.js")
+    // script(src="/javascript/jquery.tablecloth.js")
+    // script(src="/javascript/jquery.tablesorter.min.js")
+    // script(src="/javascript/jquery-dateFormat.min.js")
+    script(src="/javascript/bootstrap.min.js")
+    script(src="/javascript/bootstrap-sortable.js")
+    // script(src="/javascript/moment.min.js")
+
+
+  body
+    h1 balloon details
+    br
+    //- div(style="width:2000px;")
+    table
+      tr
+        td(width="100") 
+          b name:
+        td= b.name
+      tr
+        td 
+          b message:
+        td= b.message
+      tr
+        td 
+          b color:
+        td
+          div(style="width:20px; height:20px; background:#{b.color}")
+      tr
+        td 
+          b creation date:
+        td #{b.d} (#{b.d2})
+      tr
+        td 
+          b last updated:
+        td #{b.lastUpdate} (#{b.lastUpdateFromNow})
+    br
+    h2 location history
+    table.table.table-striped.table-hover.sortable
+      thead
+        th(data-defaultsort="desc") timestamp
+        th longitude
+        th latitude
+        th windspeed
+        th winddirection
+      tbody
+        each h in history
+          tr
+            td= h.timestamp
+            td= h.longitude
+            td= h.latitude
+            td= h.windspeed
+            td(data-value="#{h.winddirection}") #{h.winddirection} &deg;
