@@ -42,10 +42,9 @@ function Balloon(b, iconSource, focus){
 		+ b.message + "<br>"
 		+"<br>started: " + $.format.toBrowserTimeZone(b.created, 'yyyy-M-dd HH:mm')
 		+"<br>last updated: " + $.format.toBrowserTimeZone(b.location.timestamp, 'yyyy-M-dd HH:mm') + '<br>'
-		+'<a href="javascript:balloons[\''+this.b.id+'\'].showFullHistory();">show path</a><br>'
-		+'<a href="javascript:balloons[\''+this.b.id+'\'].showFullHistorySlow();">show path (slow)</a><br>'
-		+'<a href="javascript:balloons[\''+this.b.id+'\'].showHistory();">show reduced path</a><br>'
-		+'<a href="javascript:balloons[\''+this.b.id+'\'].showHistorySuperFast();">show super fast history</a><br>'
+		+'<a href="javascript:balloons[\''+this.b.id+'\'].showHistory();">show path</a><br>'
+		+'<a href="javascript:balloons[\''+this.b.id+'\'].showFullHistory();">show full path</a><br>'
+		+'<br>'
 		+'link to this balloon:<br><a href="'+window.location.protocol + "//" + window.location.host + "/#" + this.b.id + '">'+window.location.protocol + "//" + window.location.host + "/#" + this.b.id+'</a>');
 
 	
@@ -53,7 +52,7 @@ function Balloon(b, iconSource, focus){
 
 Balloon.prototype.highlight = function(){
 	this.center();
-	this.showFullHistory();
+	this.showHistory();
 	this.marker.setIcon(this._bigIcon);
 
 	var bColor = this.b.color || this.defaultBalloonColor;
@@ -78,35 +77,11 @@ Balloon.prototype.showHistory = function(){
 	});
 }
 
-Balloon.prototype.showHistorySuperFast = function(){
-	var lineColor = this.b.color || this.defaultBalloonColor;
-	that = this;
-
-	$.getJSON('balloon/'+this.b.id+'/full_history_super_fast', function(data, status, code){
-		list = $.map(data, function(el){
-			return [[el.latitude, el.longitude]];
-		});
-		L.polyline(list, {color:lineColor, weight:2}).addTo(that.map);
-	});
-}
-
 Balloon.prototype.showFullHistory = function (){
 	var lineColor = this.b.color || this.defaultBalloonColor;
 	that = this;
 
 	$.getJSON('balloon/'+this.b.id+'/full_history', function(data){
-		list = $.map(data, function(el){
-			return [[el.latitude, el.longitude]];
-		});
-		L.polyline(list, {color: lineColor, weight: 1.5, clickable:false}).addTo(that.map);
-	});
-}
-
-Balloon.prototype.showFullHistorySlow = function (){
-	var lineColor = this.b.color || this.defaultBalloonColor;
-	that = this;
-
-	$.getJSON('balloon/'+this.b.id+'/full_history_slow', function(data){
 		list = $.map(data, function(el){
 			return [[el.latitude, el.longitude]];
 		});

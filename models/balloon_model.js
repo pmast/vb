@@ -44,18 +44,6 @@ BalloonSchema.methods.getFullHistory = function (cb) {
 	});
 }
 
-BalloonSchema.methods.getFullHistorySlow = function (cb) {
-	var a = new Date();
-	return BalloonHistory.find({balloonID: this._id}, {'location': 1, '_id': 0}, {sort: {'location.timestamp': 1}}).exec(function(err, items){
-		console.log(items.length + " history items");
-		items = items.map(function(el){
-			return el.location;
-		});
-		console.log(new Date() - a);
-		cb(err, items);
-	});
-}
-
 BalloonSchema.methods.getHashID = function(){
 	return config.hashID.encryptHex(this._id.toString());
 }

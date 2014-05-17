@@ -37,39 +37,8 @@ exports.history = function(req, res){
 
 exports.full_history = function(req, res){
 	Balloon.findByID(req.params.id, function(err, balloon){
-		var a = new Date();
 		if (err) throw err;
 		balloon.getFullHistory(function(err, result){
-			var b = new Date();
-			console.log("%s", b-a);
-			if (err) throw err;
-			res.send(result);
-		});
-	});
-};
-
-exports.full_history_super_fast = function(req, res){
-	Balloon.findByID(req.params.id, function(err, balloon){
-		var a = new Date();
-		if (err) throw err;
-		balloon.getSimplifiedHistory(function(err, result){
-			var b = new Date();
-			console.log("%s", b-a);
-			if (err) throw err;
-			// res.send(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.end(JSON.stringify(result));
-		});
-	});
-};
-
-exports.full_history_slow = function(req, res){
-	Balloon.findByID(req.params.id, function(err, balloon){
-		var a = new Date();
-		if (err) throw err;
-		balloon.getFullHistorySlow(function(err, result){
-			var b = new Date();
-			console.log("%s", b-a);
 			if (err) throw err;
 			res.send(result);
 		});
